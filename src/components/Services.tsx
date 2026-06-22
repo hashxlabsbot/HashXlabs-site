@@ -109,7 +109,7 @@ function ServiceCard({
           io.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.05 }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -208,7 +208,7 @@ export default function Services() {
           <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#00aaff] bg-[#0077ff]/10 border border-[#0077ff]/20 rounded-full mb-5">
             What We Do
           </span>
-          <h2 id="services-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
+          <h2 id="services-heading" className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
             Our Complete{" "}
             <span className="gradient-text">IT Solutions</span>
           </h2>

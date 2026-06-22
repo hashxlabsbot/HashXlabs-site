@@ -53,7 +53,7 @@ export default function WhatWeBuild() {
   return (
     <section id="what-we-build" className="py-20 lg:py-28 bg-[#f0f6ff]" aria-labelledby="wwb-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-14 lg:gap-20 items-start">
 
           {/* Left: content */}
           <Reveal variant="left">
@@ -71,7 +71,7 @@ export default function WhatWeBuild() {
             </p>
 
             {/* Highlights row */}
-            <div className="flex gap-6 mb-10">
+            <div className="flex flex-wrap gap-x-6 gap-y-3 mb-10">
               {["Agile Process", "Cloud-Native", "Scalable Architecture"].map((label) => (
                 <div key={label} className="flex items-center gap-1.5 text-sm font-medium text-[#0052cc]">
                   <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

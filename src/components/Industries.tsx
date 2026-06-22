@@ -102,7 +102,7 @@ export default function Industries() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6">
           {industries.map((industry, i) => (
             <Reveal key={industry.label} variant="scale" delay={i * 55}>
-              <div className="group h-full flex flex-col items-center gap-4 p-6 rounded-2xl border border-[#e2e8f0] bg-white hover:border-[#0052cc]/40 hover:bg-[#f0f6ff] hover:shadow-lg hover:shadow-[#0052cc]/8 transition-all duration-250 cursor-default">
+              <div className="group h-full flex flex-col items-center gap-3 p-4 sm:p-6 rounded-2xl border border-[#e2e8f0] bg-white hover:border-[#0052cc]/40 hover:bg-[#f0f6ff] hover:shadow-lg hover:shadow-[#0052cc]/8 transition-all duration-250 cursor-default">
                 <div className="w-16 h-16 rounded-2xl bg-[#f0f6ff] group-hover:bg-[#0052cc] text-[#0052cc] group-hover:text-white flex items-center justify-center transition-all duration-250 shadow-sm">
                   {industry.icon}
                 </div>

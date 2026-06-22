@@ -59,7 +59,7 @@ export default function CTABanner() {
         </div>
 
         {/* Headline */}
-        <h2 id="cta-heading" className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
+        <h2 id="cta-heading" className="text-2xl sm:text-4xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
           Let&apos;s Build Your Next
           <br />
           Digital Product

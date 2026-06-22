@@ -46,7 +46,7 @@ function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
   }, [end]);
 
   return (
-    <div ref={ref} className="text-4xl font-extrabold gradient-text">
+    <div ref={ref} className="text-3xl sm:text-4xl font-extrabold gradient-text">
       {count}{suffix}
     </div>
   );
@@ -84,7 +84,7 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20 w-full">
         <div className="max-w-3xl">
 
           {/* Badge */}
@@ -98,7 +98,7 @@ export default function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="hero-headline text-4xl sm:text-5xl lg:text-[3.75rem] xl:text-[4.25rem] font-extrabold text-white leading-[1.1] tracking-tight mb-6">
+          <h1 className="hero-headline text-3xl sm:text-5xl lg:text-[3.75rem] xl:text-[4.25rem] font-extrabold text-white leading-[1.1] tracking-tight mb-6">
             Transforming Ideas Into{" "}
             <span className="gradient-text">
               Intelligent Digital&nbsp;Solutions
@@ -106,7 +106,7 @@ export default function Hero() {
           </h1>
 
           {/* Subtext */}
-          <p className="hero-sub text-lg sm:text-xl text-white/65 leading-relaxed max-w-2xl mb-10">
+          <p className="hero-sub text-base sm:text-xl text-white/65 leading-relaxed max-w-2xl mb-10">
             We help startups, SMEs, and enterprises{" "}
             <span className="text-white font-semibold">innovate, automate, and scale</span>{" "}
             through cutting-edge digital technologies.
@@ -148,7 +148,7 @@ export default function Hero() {
         </div>
 
         {/* Stats row */}
-        <div className="hero-stats mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/8">
+        <div className="hero-stats mt-14 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/8">
           {stats.map((stat, i) => (
             <div
               key={stat.label}

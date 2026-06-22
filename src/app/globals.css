@@ -118,6 +118,16 @@ body {
     transform: none !important;
     transition: none !important;
   }
+  .hero-badge,
+  .hero-headline,
+  .hero-sub,
+  .hero-ctas,
+  .hero-pills,
+  .hero-stats {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Hero CSS-driven entrance animations (no JS required) */

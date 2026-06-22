@@ -22,7 +22,6 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    // Failsafe: if IntersectionObserver is unavailable, show immediately.
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
@@ -35,7 +34,7 @@ export default function Reveal({
           io.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.05 }
     );
     io.observe(el);
     return () => io.disconnect();

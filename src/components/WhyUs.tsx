@@ -128,7 +128,7 @@ export default function WhyUs() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/10">
             {metrics.map((m) => (
               <div key={m.label} className="flex flex-col items-center justify-center gap-1.5 py-8 px-4 bg-white/3">
-                <div className="text-4xl font-extrabold gradient-text">
+                <div className="text-3xl sm:text-4xl font-extrabold gradient-text">
                   <AnimatedMetric end={m.end} suffix={m.suffix} />
                 </div>
                 <div className="text-xs font-medium text-white/45 tracking-wide text-center">{m.label}</div>
