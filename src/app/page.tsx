@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import TechMarquee from "@/components/TechMarquee";
 import Services from "@/components/Services";
 import WhatWeBuild from "@/components/WhatWeBuild";
 import Industries from "@/components/Industries";
@@ -13,6 +14,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <TechMarquee />
         <Services />
         <WhatWeBuild />
         <Industries />

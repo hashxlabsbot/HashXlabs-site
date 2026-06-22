@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Reveal from "./Reveal";
+
 const services = [
   {
     icon: (
@@ -10,6 +15,7 @@ const services = [
     description:
       "Fully bespoke business and enterprise software built around your exact needs and workflows.",
     tag: "Backend · API · Cloud",
+    accent: "from-[#0052cc] to-[#0077ff]",
   },
   {
     icon: (
@@ -22,6 +28,7 @@ const services = [
     description:
       "Customer portals, dashboards, internal tools, and scalable SaaS solutions built for growth.",
     tag: "React · Next.js · Node",
+    accent: "from-[#0077ff] to-[#00aaff]",
   },
   {
     icon: (
@@ -34,6 +41,7 @@ const services = [
     description:
       "Native and cross-platform Android & iOS apps that deliver seamless, high-performance user experiences.",
     tag: "React Native · Flutter",
+    accent: "from-[#006ee6] to-[#00aaff]",
   },
   {
     icon: (
@@ -46,6 +54,7 @@ const services = [
     description:
       "ERP-style systems, workflow automation, and multi-user enterprise platforms that eliminate bottlenecks.",
     tag: "ERP · Automation · Integration",
+    accent: "from-[#0052cc] to-[#006ee6]",
   },
   {
     icon: (
@@ -58,6 +67,7 @@ const services = [
     description:
       "Boost your brand, generate qualified leads, and grow your business with data-driven marketing strategies.",
     tag: "SEO · Ads · Social",
+    accent: "from-[#0077ff] to-[#00c6ff]",
   },
   {
     icon: (
@@ -70,58 +80,148 @@ const services = [
     description:
       "Intelligent AI solutions and automation tools to optimise operations, cut costs, and drive measurable growth.",
     tag: "LLMs · ML · Chatbots",
+    accent: "from-[#00aaff] to-[#0077ff]",
   },
 ];
 
+function ServiceCard({
+  service,
+  index,
+}: {
+  service: (typeof services)[number];
+  index: number;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  function onMouseMove(e: React.MouseEvent<HTMLElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ rx: -py * 7, ry: px * 7 });
+  }
+
+  function onMouseLeave() {
+    setTilt({ rx: 0, ry: 0 });
+  }
+
+  return (
+    <article
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className="glass-card group relative flex flex-col p-7 rounded-2xl overflow-hidden cursor-default"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible
+          ? `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateY(0)`
+          : "perspective(900px) translateY(44px)",
+        transition:
+          "opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.25s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+        transitionDelay: visible ? `${index * 70}ms, 0ms, 0ms, 0ms` : "0ms",
+      }}
+    >
+      {/* Top gradient line */}
+      <div
+        className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${service.accent} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
+        aria-hidden="true"
+      />
+
+      {/* Icon */}
+      <div
+        className="icon-glow w-14 h-14 rounded-xl flex items-center justify-center mb-5 flex-shrink-0 text-[#00aaff]"
+        style={{ background: "rgba(0, 119, 255, 0.15)" }}
+      >
+        {service.icon}
+      </div>
+
+      {/* Content */}
+      <h3 className="text-base font-bold text-white mb-3 leading-snug">
+        {service.title}
+      </h3>
+      <p className="text-sm text-white/50 leading-relaxed flex-1 mb-4">
+        {service.description}
+      </p>
+
+      {/* Tag */}
+      <span className="inline-block text-[11px] font-semibold text-[#00aaff]/80 bg-[#0077ff]/10 border border-[#0077ff]/20 px-3 py-1 rounded-full self-start tracking-wide">
+        {service.tag}
+      </span>
+
+      {/* Arrow — appears on hover */}
+      <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0">
+        <svg className="w-4 h-4 text-[#00aaff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </article>
+  );
+}
+
 export default function Services() {
   return (
-    <section id="services" className="py-20 lg:py-28 bg-white" aria-labelledby="services-heading">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="services"
+      className="py-20 lg:py-28 relative overflow-hidden"
+      style={{ background: "#060b1f" }}
+      aria-labelledby="services-heading"
+    >
+      {/* Dot grid background */}
+      <div className="absolute inset-0 dot-grid opacity-70" aria-hidden="true" />
+
+      {/* Glows */}
+      <div
+        className="absolute top-0 left-1/3 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, #0052cc, transparent)" }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-8 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, #00aaff, transparent)" }}
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#0052cc] bg-[#f0f6ff] rounded-full mb-4">
+        <Reveal className="text-center mb-16">
+          <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#00aaff] bg-[#0077ff]/10 border border-[#0077ff]/20 rounded-full mb-5">
             What We Do
           </span>
-          <h2 id="services-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0b1340] mb-5">
-            Our Complete IT Solutions
+          <h2 id="services-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
+            Our Complete{" "}
+            <span className="gradient-text">IT Solutions</span>
           </h2>
-          <p className="text-lg text-[#64748b] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
             End-to-end technology services that help businesses innovate faster,
             operate smarter, and scale with confidence.
           </p>
-        </div>
+        </Reveal>
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map((service, i) => (
-            <article
-              key={i}
-              className="card-hover group relative flex flex-col p-7 rounded-2xl border border-[#e2e8f0] bg-white overflow-hidden"
-            >
-              {/* Blue left accent bar on hover */}
-              <div
-                className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#0077ff] to-[#00aaff] rounded-l-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                aria-hidden="true"
-              />
-
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-xl bg-[#f0f6ff] group-hover:bg-[#e8efff] text-[#0052cc] flex items-center justify-center mb-5 transition-colors duration-300 flex-shrink-0">
-                {service.icon}
-              </div>
-
-              {/* Content */}
-              <h3 className="text-lg font-bold text-[#0b1340] mb-3 leading-snug">
-                {service.title}
-              </h3>
-              <p className="text-sm text-[#64748b] leading-relaxed flex-1 mb-4">
-                {service.description}
-              </p>
-
-              {/* Tech tag */}
-              <span className="inline-block text-xs font-medium text-[#0052cc] bg-[#f0f6ff] px-3 py-1 rounded-full self-start">
-                {service.tag}
-              </span>
-            </article>
+            <ServiceCard key={i} service={service} index={i} />
           ))}
         </div>
       </div>

@@ -1,3 +1,5 @@
+import Reveal from "./Reveal";
+
 const items = [
   {
     title: "Custom Software Development",
@@ -52,9 +54,10 @@ export default function WhatWeBuild() {
     <section id="what-we-build" className="py-20 lg:py-28 bg-[#f0f6ff]" aria-labelledby="wwb-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
           {/* Left: content */}
-          <div>
-            <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#0052cc] bg-white rounded-full mb-5 shadow-sm">
+          <Reveal variant="left">
+            <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0052cc] bg-white rounded-full mb-5 shadow-sm border border-[#e2e8f0]">
               What We Build
             </span>
             <h2 id="wwb-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0b1340] mb-6 leading-tight">
@@ -67,35 +70,43 @@ export default function WhatWeBuild() {
               challenges — fast, scalable, and built to last.
             </p>
 
-            {/* CTA */}
+            {/* Highlights row */}
+            <div className="flex gap-6 mb-10">
+              {["Agile Process", "Cloud-Native", "Scalable Architecture"].map((label) => (
+                <div key={label} className="flex items-center gap-1.5 text-sm font-medium text-[#0052cc]">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {label}
+                </div>
+              ))}
+            </div>
+
             <a
               href="mailto:info@hashxlabs.com"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white blue-gradient hover:opacity-90 transition-opacity shadow-lg shadow-[#0052cc]/30"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white blue-gradient hover:opacity-90 transition-opacity shadow-lg shadow-[#0052cc]/30"
             >
               Discuss Your Project
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
-          </div>
+          </Reveal>
 
           {/* Right: feature list */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {items.map((item, i) => (
-              <div
-                key={i}
-                className="flex gap-4 p-5 rounded-2xl bg-white border border-[#e2e8f0] hover:border-[#0052cc]/30 hover:shadow-md transition-all duration-250"
-              >
-                {/* Icon */}
-                <div className="w-10 h-10 rounded-xl bg-[#f0f6ff] text-[#0052cc] flex items-center justify-center flex-shrink-0 mt-0.5">
-                  {item.icon}
+              <Reveal key={i} variant="right" delay={i * 80}>
+                <div className="group flex gap-4 p-5 rounded-2xl bg-white border border-[#e2e8f0] hover:border-[#0052cc]/30 hover:shadow-lg hover:shadow-[#0052cc]/8 transition-all duration-250">
+                  <div className="w-10 h-10 rounded-xl bg-[#f0f6ff] group-hover:bg-[#0052cc] text-[#0052cc] group-hover:text-white flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-250">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#0b1340] mb-1">{item.title}</h3>
+                    <p className="text-sm text-[#64748b] leading-relaxed">{item.description}</p>
+                  </div>
                 </div>
-                {/* Text */}
-                <div>
-                  <h3 className="text-base font-bold text-[#0b1340] mb-1">{item.title}</h3>
-                  <p className="text-sm text-[#64748b] leading-relaxed">{item.description}</p>
-                </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

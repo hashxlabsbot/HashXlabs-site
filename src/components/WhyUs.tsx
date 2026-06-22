@@ -1,9 +1,20 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Reveal from "./Reveal";
+
+const metrics = [
+  { end: 50, suffix: "+", label: "Projects Delivered" },
+  { end: 30, suffix: "+", label: "Happy Clients" },
+  { end: 8,  suffix: "+", label: "Industries Served" },
+  { end: 5,  suffix: "+", label: "Years of Expertise" },
+];
+
 const differentiators = [
   {
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
     title: "Fast Time-to-Market",
@@ -45,47 +56,104 @@ const differentiators = [
   },
 ];
 
+function AnimatedMetric({ end, suffix }: { end: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || started.current) return;
+        started.current = true;
+        const duration = 1600;
+        const startTime = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          setCount(Math.round(eased * end));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end]);
+
+  return (
+    <span ref={ref}>
+      {count}{suffix}
+    </span>
+  );
+}
+
 export default function WhyUs() {
   return (
     <section id="why-us" className="py-20 lg:py-28 navy-gradient relative overflow-hidden" aria-labelledby="why-heading">
       {/* Background grid */}
-      <div className="absolute inset-0 circuit-lines opacity-20" aria-hidden="true" />
+      <div className="absolute inset-0 dot-grid opacity-50" aria-hidden="true" />
 
-      {/* Glow */}
+      {/* Glows */}
       <div
-        className="absolute top-0 right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl pointer-events-none"
+        className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl pointer-events-none"
         style={{ background: "radial-gradient(circle, #0077ff, transparent)" }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full opacity-8 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, #00aaff, transparent)" }}
         aria-hidden="true"
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#00aaff] bg-white/10 rounded-full mb-4">
+        <Reveal className="text-center mb-14">
+          <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#00aaff] bg-white/8 border border-white/15 rounded-full mb-4">
             Why HashX Labs
           </span>
-          <h2 id="why-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5">
-            The HashX Difference
+          <h2 id="why-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
+            The{" "}
+            <span className="gradient-text">HashX Difference</span>
           </h2>
-          <p className="text-lg text-white/60 max-w-2xl mx-auto">
-            We're not just developers — we're product partners invested in your success.
+          <p className="text-lg text-white/55 max-w-2xl mx-auto">
+            We&apos;re not just developers — we&apos;re product partners invested in your success.
           </p>
-        </div>
+        </Reveal>
+
+        {/* Metrics strip */}
+        <Reveal delay={80} className="mb-14">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/10">
+            {metrics.map((m) => (
+              <div key={m.label} className="flex flex-col items-center justify-center gap-1.5 py-8 px-4 bg-white/3">
+                <div className="text-4xl font-extrabold gradient-text">
+                  <AnimatedMetric end={m.end} suffix={m.suffix} />
+                </div>
+                <div className="text-xs font-medium text-white/45 tracking-wide text-center">{m.label}</div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
 
         {/* Differentiators grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {differentiators.map((d, i) => (
-            <div
-              key={i}
-              className="group p-7 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-[#0077ff]/40 transition-all duration-250"
-            >
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-[#0052cc]/30 group-hover:bg-[#0052cc]/50 text-[#00aaff] flex items-center justify-center mb-5 transition-colors duration-250">
-                {d.icon}
+            <Reveal key={i} delay={i * 80}>
+              <div className="group glass-card h-full p-6 rounded-2xl hover:bg-white/8 transition-all duration-250">
+                {/* Number */}
+                <div className="text-5xl font-extrabold text-white/6 leading-none select-none mb-4 -ml-1">
+                  0{i + 1}
+                </div>
+                {/* Icon */}
+                <div className="w-11 h-11 rounded-xl bg-[#0052cc]/30 group-hover:bg-[#0052cc]/50 text-[#00aaff] flex items-center justify-center mb-4 transition-colors duration-250">
+                  {d.icon}
+                </div>
+                <h3 className="text-base font-bold text-white mb-2">{d.title}</h3>
+                <p className="text-sm text-white/50 leading-relaxed">{d.description}</p>
               </div>
-              <h3 className="text-base font-bold text-white mb-3">{d.title}</h3>
-              <p className="text-sm text-white/60 leading-relaxed">{d.description}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

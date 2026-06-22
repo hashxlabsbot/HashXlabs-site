@@ -99,6 +99,35 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Scroll reveal (IntersectionObserver-driven, CSS transitions) */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-up    { transform: translateY(42px); }
+.reveal-left  { transform: translateX(-46px); }
+.reveal-right { transform: translateX(46px); }
+.reveal-scale { transform: scale(0.88) translateY(22px); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hero CSS-driven entrance animations (no JS required) */
+.hero-badge    { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both; }
+.hero-headline { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both; }
+.hero-sub      { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.30s both; }
+.hero-ctas     { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both; }
+.hero-pills    { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.54s both; }
+.hero-stats    { animation: slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both; }
+
 .animate-float {
   animation: float 5s ease-in-out infinite;
 }
@@ -111,3 +140,57 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
 ::-webkit-scrollbar-thumb { background: #0052cc; border-radius: 3px; }
+
+/* ─── Marquee ─── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+/* ─── Glassmorphism card ─── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 119, 255, 0.12);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 170, 255, 0.38);
+  box-shadow: 0 0 40px rgba(0, 119, 255, 0.14), 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Neon icon glow ─── */
+.icon-glow {
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.icon-glow:hover,
+.group:hover .icon-glow {
+  box-shadow: 0 0 24px rgba(0, 119, 255, 0.45);
+  background: rgba(0, 119, 255, 0.25) !important;
+}
+
+/* ─── Gradient border badge ─── */
+@keyframes border-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+.badge-animated {
+  animation: border-pulse 2.5s ease-in-out infinite;
+}
+
+/* ─── Dot grid for dark sections ─── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(0, 119, 255, 0.10) 1px, transparent 1px);
+  background-size: 30px 30px;
+}

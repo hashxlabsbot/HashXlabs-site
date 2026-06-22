@@ -2,9 +2,15 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// Next.js App Router streams its hydration payload via inline <script> tags
+// (self.__next_f.push). A strict `script-src 'self'` blocks these and the page
+// never hydrates — experimental SRI only covers external script files, not
+// inline ones. 'unsafe-inline' is the documented "Without Nonces" approach that
+// keeps the site statically generated and CDN-cacheable. For stricter CSP,
+// switch to a nonce-based policy via proxy.ts (forces dynamic rendering).
 const cspHeader = `
   default-src 'self';
-  script-src 'self'${isDev ? " 'unsafe-eval'" : ""};
+  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data:;
   font-src 'self' data:;

@@ -1,3 +1,5 @@
+import Reveal from "./Reveal";
+
 const industries = [
   {
     label: "Construction",
@@ -69,8 +71,7 @@ const industries = [
     label: "Education",
     icon: (
       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-          d="M12 14l9-5-9-5-9 5 9 5z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l9-5-9-5-9 5 9 5z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
           d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
       </svg>
@@ -82,9 +83,10 @@ export default function Industries() {
   return (
     <section id="industries" className="py-20 lg:py-28 bg-white" aria-labelledby="industries-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#0052cc] bg-[#f0f6ff] rounded-full mb-4">
+        <Reveal className="text-center mb-16">
+          <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0052cc] bg-[#f0f6ff] border border-[#e2e8f0] rounded-full mb-4">
             Sectors We Serve
           </span>
           <h2 id="industries-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0b1340] mb-5">
@@ -94,32 +96,33 @@ export default function Industries() {
             Delivering domain-specific digital solutions across eight key industries
             with deep understanding of their unique challenges.
           </p>
-        </div>
+        </Reveal>
 
         {/* Industry grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6">
-          {industries.map((industry) => (
-            <div
-              key={industry.label}
-              className="group flex flex-col items-center gap-4 p-6 rounded-2xl border border-[#e2e8f0] bg-white hover:border-[#0052cc]/40 hover:bg-[#f0f6ff] hover:shadow-lg hover:shadow-[#0052cc]/8 transition-all duration-250 cursor-default"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-[#f0f6ff] group-hover:bg-white text-[#0052cc] flex items-center justify-center transition-colors duration-250 shadow-sm">
-                {industry.icon}
+          {industries.map((industry, i) => (
+            <Reveal key={industry.label} variant="scale" delay={i * 55}>
+              <div className="group h-full flex flex-col items-center gap-4 p-6 rounded-2xl border border-[#e2e8f0] bg-white hover:border-[#0052cc]/40 hover:bg-[#f0f6ff] hover:shadow-lg hover:shadow-[#0052cc]/8 transition-all duration-250 cursor-default">
+                <div className="w-16 h-16 rounded-2xl bg-[#f0f6ff] group-hover:bg-[#0052cc] text-[#0052cc] group-hover:text-white flex items-center justify-center transition-all duration-250 shadow-sm">
+                  {industry.icon}
+                </div>
+                <span className="text-sm font-semibold text-[#0b1340] text-center">
+                  {industry.label}
+                </span>
               </div>
-              <span className="text-sm font-semibold text-[#0b1340] text-center">
-                {industry.label}
-              </span>
-            </div>
+            </Reveal>
           ))}
         </div>
 
         {/* Bottom note */}
-        <p className="text-center text-sm text-[#64748b] mt-10">
-          Don't see your industry?{" "}
-          <a href="mailto:info@hashxlabs.com" className="text-[#0052cc] font-medium hover:underline">
-            We work across many verticals — let's talk.
-          </a>
-        </p>
+        <Reveal delay={150} className="text-center mt-10">
+          <p className="text-sm text-[#64748b]">
+            Don&apos;t see your industry?{" "}
+            <a href="mailto:info@hashxlabs.com" className="text-[#0052cc] font-semibold hover:underline">
+              We work across many verticals — let&apos;s talk.
+            </a>
+          </p>
+        </Reveal>
       </div>
     </section>
   );
