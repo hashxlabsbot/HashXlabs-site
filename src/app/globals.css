@@ -99,18 +99,34 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Scroll reveal (IntersectionObserver-driven, CSS transitions) */
+/* Scroll reveal (IntersectionObserver-driven, CSS transitions)
+   Defense-in-depth: content is VISIBLE by default. The hidden/animated
+   start-state is only applied once the client app confirms JS is running
+   by adding `.js-ready` to <html>. If hydration ever fails (e.g. a CDN
+   breaks a chunk), the `.js-ready` class is never added and all content
+   stays fully visible instead of blank. */
 .reveal {
+  opacity: 1;
+}
+.js-ready .reveal {
   opacity: 0;
   transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
-.reveal-up    { transform: translateY(42px); }
-.reveal-left  { transform: translateX(-46px); }
-.reveal-right { transform: translateX(46px); }
-.reveal-scale { transform: scale(0.88) translateY(22px); }
-.reveal.is-visible { opacity: 1; transform: none; }
+.js-ready .reveal-up    { transform: translateY(42px); }
+.js-ready .reveal-left  { transform: translateX(-46px); }
+.js-ready .reveal-right { transform: translateX(46px); }
+.js-ready .reveal-scale { transform: scale(0.88) translateY(22px); }
+.js-ready .reveal.is-visible { opacity: 1; transform: none; }
+
+/* Failsafe for cards that animate via inline opacity (React state):
+   if JS never confirms readiness, force them visible. `!important` is
+   required to beat the inline style. */
+html:not(.js-ready) .glass-card {
+  opacity: 1 !important;
+  transform: none !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {

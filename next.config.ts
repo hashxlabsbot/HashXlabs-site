@@ -4,10 +4,15 @@ const isDev = process.env.NODE_ENV === "development";
 
 // Next.js App Router streams its hydration payload via inline <script> tags
 // (self.__next_f.push). A strict `script-src 'self'` blocks these and the page
-// never hydrates — experimental SRI only covers external script files, not
-// inline ones. 'unsafe-inline' is the documented "Without Nonces" approach that
-// keeps the site statically generated and CDN-cacheable. For stricter CSP,
+// never hydrates. 'unsafe-inline' is the documented "Without Nonces" approach
+// that keeps the site statically generated and CDN-cacheable. For stricter CSP,
 // switch to a nonce-based policy via proxy.ts (forces dynamic rendering).
+//
+// NOTE: `experimental.sri` was intentionally removed. SRI adds integrity hashes
+// to chunk <script> tags; if a CDN/proxy recompresses those chunks the hash no
+// longer matches and the browser blocks them, breaking hydration in production
+// only (works locally). The progressive-enhancement reveal in globals.css also
+// guards against any hydration failure by keeping content visible by default.
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
@@ -50,11 +55,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  experimental: {
-    sri: {
-      algorithm: "sha256",
-    },
-  },
   async headers() {
     return [
       {
