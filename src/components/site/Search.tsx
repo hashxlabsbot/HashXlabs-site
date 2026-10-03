@@ -17,6 +17,7 @@ const PAGES: Entry[] = [
   { title: "Work", sub: "Selected engagements", href: "/case-studies" },
   { title: "About", sub: "Page", href: "/about" },
   { title: "Invariant Lab", sub: "Interactive demo", href: "/lab" },
+  { title: "TOKEN2049 Singapore", sub: "Meet us, 7–10 Oct 2026", href: "/token2049" },
   { title: "Contact", sub: "Start a project", href: "/contact" },
 ];
 

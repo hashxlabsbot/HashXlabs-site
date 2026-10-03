@@ -12,6 +12,7 @@ const NAV = [
   { href: "/solutions", label: "Solutions" },
   { href: "/case-studies", label: "Work" },
   { href: "/about", label: "About" },
+  { href: "/token2049", label: "TOKEN2049" },
 ];
 
 function openSearch() {
