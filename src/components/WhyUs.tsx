@@ -4,157 +4,149 @@ import { useEffect, useRef, useState } from "react";
 import Reveal from "./Reveal";
 
 const metrics = [
-  { end: 50, suffix: "+", label: "Projects Delivered" },
-  { end: 30, suffix: "+", label: "Happy Clients" },
-  { end: 8,  suffix: "+", label: "Industries Served" },
-  { end: 5,  suffix: "+", label: "Years of Expertise" },
+  { end: 500, prefix: "$", suffix: "M+", label: "TVL & Capital Secured" },
+  { end: 150, prefix: "", suffix: "+", label: "Smart Contracts Audited" },
+  { end: 50, prefix: "", suffix: "+", label: "Global Enterprise Clients" },
+  { end: 99.9, prefix: "", suffix: "%", label: "System & SLA Uptime" },
 ];
 
 const differentiators = [
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    title: "Fast Time-to-Market",
+    title: "Formal verification and adversarial testing",
     description:
-      "Agile sprints, rapid prototyping, and lean delivery cycles mean you go from idea to live product faster than traditional agencies.",
+      "Every smart contract and enterprise API we ship undergoes automated formal verification, static analysis, and multi-tier penetration testing.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
-    title: "Quality You Can Trust",
+    title: "Top 1% Senior Web3 & AI Engineers",
     description:
-      "Rigorous code reviews, automated testing, and security-first architecture ensure every product we ship is robust and reliable.",
+      "Direct collaboration with veteran protocol architects, Rust & Solidity experts, and Machine Learning researchers — no junior offshore outsourcing.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    title: "Full-Stack Expertise",
+    title: "Sub-Second Latency Architecture",
     description:
-      "One team covering design, frontend, backend, mobile, AI, and cloud — no handoff chaos, just seamless end-to-end ownership.",
+      "Optimized EVM / Solana transactions, private RPC node clusters, and edge-cached LLM inferencing designed for extreme concurrent volume.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Domain-Aware Delivery",
+    title: "Full Lifecycle Partnership & Governance",
     description:
-      "We understand your industry's workflows and compliance requirements, so our solutions fit your business — not just your tech stack.",
+      "From tokenomics design and regulatory readiness to mainnet deployment and 24/7 on-call DevOps support.",
   },
 ];
 
-function AnimatedMetric({ end, suffix }: { end: number; suffix: string }) {
+function AnimatedMetric({ end, prefix = "", suffix = "" }: { end: number; prefix?: string; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
+    let raf = 0;
+    let fallback = 0;
+
+    const settle = () =>
+      setCount(end % 1 !== 0 ? parseFloat(end.toFixed(1)) : Math.round(end));
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting || started.current) return;
         started.current = true;
+
+        if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+          settle();
+          return;
+        }
+
         const duration = 1600;
         const startTime = performance.now();
         const tick = (now: number) => {
           const t = Math.min((now - startTime) / duration, 1);
-          const eased = 1 - Math.pow(1 - t, 3);
-          setCount(Math.round(eased * end));
-          if (t < 1) requestAnimationFrame(tick);
+          const val = (1 - Math.pow(1 - t, 3)) * end;
+          setCount(end % 1 !== 0 ? parseFloat(val.toFixed(1)) : Math.round(val));
+          if (t < 1) raf = requestAnimationFrame(tick);
         };
-        requestAnimationFrame(tick);
+        raf = requestAnimationFrame(tick);
+
+        // See Hero: without this the metric can sit at 0 forever.
+        fallback = window.setTimeout(settle, duration + 400);
       },
       { threshold: 0.5 }
     );
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+      if (fallback) window.clearTimeout(fallback);
+    };
   }, [end]);
 
-  return (
-    <span ref={ref}>
-      {count}{suffix}
-    </span>
-  );
+  return <span ref={ref} className="tabular-nums">{prefix}{count}{suffix}</span>;
 }
 
 export default function WhyUs() {
   return (
-    <section id="why-us" className="py-20 lg:py-28 navy-gradient relative overflow-hidden" aria-labelledby="why-heading">
-      {/* Background grid */}
-      <div className="absolute inset-0 dot-grid opacity-50" aria-hidden="true" />
-
-      {/* Glows */}
-      <div
-        className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, #0077ff, transparent)" }}
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full opacity-8 blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, #00aaff, transparent)" }}
-        aria-hidden="true"
-      />
+    <section
+      id="why-us"
+      className="relative py-24 sm:py-32 bg-[var(--bg-page)] transition-colors duration-300 overflow-hidden"
+      aria-labelledby="why-heading"
+    >
+      <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" aria-hidden="true" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
-        <Reveal className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-[#00aaff] bg-white/8 border border-white/15 rounded-full mb-4">
-            Why HashX Labs
-          </span>
-          <h2 id="why-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
-            The{" "}
-            <span className="gradient-text">HashX Difference</span>
-          </h2>
-          <p className="text-lg text-white/55 max-w-2xl mx-auto">
-            We&apos;re not just developers — we&apos;re product partners invested in your success.
-          </p>
-        </Reveal>
-
-        {/* Metrics strip */}
-        <Reveal delay={80} className="mb-14">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/10">
-            {metrics.map((m) => (
-              <div key={m.label} className="flex flex-col items-center justify-center gap-1.5 py-8 px-4 bg-white/3">
-                <div className="text-3xl sm:text-4xl font-extrabold gradient-text">
-                  <AnimatedMetric end={m.end} suffix={m.suffix} />
+        {/* Metrics Strip */}
+        <Reveal className="mb-16">
+          <div className="grid grid-cols-2 sm:grid-cols-4 rounded-2xl overflow-hidden border border-[var(--line-strong)] bg-[var(--bg-card)] backdrop-blur-md shadow-xl">
+            {metrics.map((m, i) => (
+              <div
+                key={m.label}
+                className={`flex flex-col items-center justify-center p-6 text-center ${
+                  i < metrics.length - 1 ? "border-b sm:border-b-0 sm:border-r border-[var(--line)]" : ""
+                }`}
+              >
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold gradient-text">
+                  <AnimatedMetric end={m.end} prefix={m.prefix} suffix={m.suffix} />
                 </div>
-                <div className="text-xs font-medium text-white/45 tracking-wide text-center">{m.label}</div>
+                <div className="mono text-[11px] text-[var(--t-mid)] tracking-wider uppercase mt-2 font-medium">
+                  {m.label}
+                </div>
               </div>
             ))}
           </div>
         </Reveal>
 
-        {/* Differentiators grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {differentiators.map((d, i) => (
-            <Reveal key={i} delay={i * 80}>
-              <div className="group glass-card h-full p-6 rounded-2xl hover:bg-white/8 transition-all duration-250">
-                {/* Number */}
-                <div className="text-5xl font-extrabold text-white/6 leading-none select-none mb-4 -ml-1">
-                  0{i + 1}
+        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-16 items-start">
+          {/* Header */}
+          <Reveal variant="left" className="lg:sticky lg:top-28">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="eyebrow">The HashX Advantage</span>
+              <div className="h-px w-14 bg-gradient-to-r from-blue-500 to-transparent" />
+            </div>
+            <h2 id="why-heading" className="display text-3xl sm:text-5xl text-[var(--t-hi)] mb-5">
+              Why Global Leaders <span className="gradient-text">Choose HashX</span>
+            </h2>
+            <p className="text-base sm:text-lg text-[var(--t-mid)] leading-relaxed">
+              We combine deep cryptographic rigor with enterprise AI expertise, giving your team an unbeatable technical edge.
+            </p>
+          </Reveal>
+
+          {/* Differentiators */}
+          <div>
+            {differentiators.map((d, i) => (
+              <Reveal key={d.title} variant="right" delay={i * 85}>
+                <div className="group relative flex items-start gap-6 py-7 border-b border-[var(--line)] hover:border-blue-500/40 transition-colors duration-300">
+                  <span className="mono text-4xl sm:text-5xl font-extrabold text-[var(--t-lo)] opacity-40 select-none group-hover:text-blue-500 transition-colors duration-300">
+                    0{i + 1}
+                  </span>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-[var(--t-hi)] mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                      {d.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-[var(--t-mid)] leading-relaxed">
+                      {d.description}
+                    </p>
+                  </div>
                 </div>
-                {/* Icon */}
-                <div className="w-11 h-11 rounded-xl bg-[#0052cc]/30 group-hover:bg-[#0052cc]/50 text-[#00aaff] flex items-center justify-center mb-4 transition-colors duration-250">
-                  {d.icon}
-                </div>
-                <h3 className="text-base font-bold text-white mb-2">{d.title}</h3>
-                <p className="text-sm text-white/50 leading-relaxed">{d.description}</p>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>

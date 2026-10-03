@@ -10,6 +10,18 @@ import { useEffect } from "react";
 export default function ClientReady() {
   useEffect(() => {
     document.documentElement.classList.add("js-ready");
+
+    const onPointerMove = (e: PointerEvent) => {
+      const target = (e.target as HTMLElement)?.closest?.(".spotlight") as HTMLElement | null;
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        target.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+        target.style.setProperty("--my", `${e.clientY - rect.top}px`);
+      }
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
   }, []);
 
   return null;

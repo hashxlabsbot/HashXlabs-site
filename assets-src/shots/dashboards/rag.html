@@ -1,0 +1,138 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Retrieval assistant</title><style>/* Shared look for the illustrative dashboards (matches assets-src/shots/work-amm.png).
+   Fixed 1584x993 canvas; rendered to PNG by scripts/render-shots.mjs. */
+:root { --blue:#0a5cff; --blue2:#0058f5; --ink:#0b1a3a; --ink2:#34436a; --mute:#5d6b8a; --line:#e3ebf8; --soft:#f6f9fe; --green:#0fa968; --amber:#c27a0a; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { width: 1584px; height: 993px; overflow: hidden; color: var(--ink); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, system-ui, sans-serif; }
+.win { position: relative; width: 1584px; height: 993px; overflow: hidden;
+  background: radial-gradient(1100px 640px at 68% 22%, #f7faff, transparent 70%), linear-gradient(180deg, #f3f8fe, #edf3fc); }
+.ic { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* window chrome */
+.titlebar { position: absolute; inset: 0 0 auto 0; height: 61px; background: #eff6fe; border-bottom: 1px solid #dfe8f6; }
+.tl { position: absolute; top: 21px; width: 18px; height: 18px; border-radius: 50%; }
+.tl.r { left: 23px; background: #fb3e40; } .tl.y { left: 52px; background: #fdbf08; } .tl.g { left: 80px; background: #03ba42; }
+.sidebar { position: absolute; left: 0; top: 61px; bottom: 0; width: 160px; background: linear-gradient(180deg, #fff, #f8fbfe); border-right: 1px solid #e8eff9; }
+.nav { position: absolute; left: 13px; right: 8px; top: 76px; }
+.nav a { position: relative; display: flex; align-items: center; gap: 14px; height: 60px; margin-bottom: 2.7px; padding-left: 20px; border-radius: 12px; white-space: nowrap; letter-spacing: -.005em; font-size: 18px; font-weight: 500; color: var(--ink2); }
+.nav a .ic { width: 26px; height: 26px; stroke-width: 1.9; color: #3b4a72; }
+.nav a.on { background: #eaf2fe; color: var(--blue); font-weight: 600; }
+.nav a.on .ic { color: var(--blue); }
+.nav a.on::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 5px; border-radius: 3px; background: #0058ff; }
+
+/* top bar */
+.pill { position: absolute; background: #fff; border-radius: 14px; box-shadow: 0 1px 2px rgba(20,50,110,.05), 0 6px 18px rgba(40,90,190,.07); display: flex; align-items: center; }
+.search { left: 178px; top: 78px; width: 598px; height: 48px; gap: 16px; padding-left: 18px; font-size: 18px; color: #6878a6; }
+.search .ic { width: 24px; height: 24px; color: #2c3d6b; stroke-width: 2; }
+.bell { position: absolute; left: 1161px; top: 82px; color: #1d2f5e; } .bell .ic { width: 28px; height: 28px; }
+.bell i { position: absolute; right: -2px; top: -2px; width: 11px; height: 11px; border-radius: 50%; background: #f90e14; border: 2px solid #eef4fc; }
+.wicon { position: absolute; left: 1222px; top: 83px; color: #1d2f5e; } .wicon .ic { width: 28px; height: 28px; }
+.wallet { left: 1283px; top: 70px; width: 198px; height: 54px; gap: 12px; padding: 0 14px; font-size: 18px; font-weight: 600; white-space: nowrap; }
+.wallet .ic { color: var(--blue); width: 26px; height: 26px; } .wallet .ic:last-child { margin-left: auto; color: #1d2f5e; width: 22px; height: 22px; }
+.avatar-top { position: absolute; left: 1503px; top: 73px; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px rgba(60,100,200,.2); } .avatar-top svg { display: block; }
+
+/* cards */
+.card { position: absolute; background: #fff; border-radius: 18px; border: 1px solid rgba(222,233,250,.8); box-shadow: 0 1px 2px rgba(25,60,130,.05), 0 12px 32px -6px rgba(40,100,200,.10); padding: 22px 26px 0; }
+.c1 { left: 176px; top: 152px; width: 470px; height: 554px; } .c2 { left: 663px; top: 152px; width: 455px; height: 554px; } .c3 { left: 1136px; top: 152px; width: 431px; height: 554px; }
+.ch { display: flex; align-items: center; justify-content: space-between; height: 40px; font-size: 25px; font-weight: 650; letter-spacing: -.012em; }
+.ch .ic { color: #34436a; width: 24px; height: 24px; }
+.sel { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1.5px solid #e1e9f6; background: #fff; font-size: 16px; font-weight: 600; letter-spacing: 0; }
+.sel .ic { width: 18px; height: 18px; }
+.field { background: #f8fbff; border: 1.5px solid #e4edf9; border-radius: 16px; }
+.lbl { font-size: 16px; color: var(--mute); font-weight: 500; }
+.mute { color: var(--mute); }
+.btn { display: flex; align-items: center; justify-content: center; gap: 10px; height: 64px; border-radius: 12px; font-size: 21px; font-weight: 600; }
+.btn.p { color: #fff; background: linear-gradient(180deg, #1a6bff, #0058f5); box-shadow: 0 8px 16px -6px rgba(0,88,245,.45), inset 0 1px 0 rgba(255,255,255,.28); }
+.btn.s { color: var(--blue); background: #fff; border: 1.8px solid #2a6df0; }
+.btn .ic { width: 22px; height: 22px; stroke-width: 2; }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border-radius: 999px; font-size: 14.5px; font-weight: 600; white-space: nowrap; }
+.badge .ic { width: 16px; height: 16px; stroke-width: 2.2; }
+.badge.ok { background: #e6f8ef; color: #0e8f5b; } .badge.warn { background: #fff3da; color: #b06f08; } .badge.bad { background: #fdebea; color: #c13a2e; } .badge.info { background: #e8f0fe; color: var(--blue); } .badge.mute { background: #f0f4fa; color: var(--mute); }
+.tg { display: block; position: relative; width: 48px; height: 28px; border-radius: 999px; background: #d3deef; flex: none; }
+.tg::after { content: ""; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.tg.on { background: var(--blue); } .tg.on::after { left: 23px; }
+.av { display: grid; place-items: center; flex: none; border-radius: 50%; color: #fff; font-weight: 650; letter-spacing: .01em; }
+.tok { display: grid; place-items: center; flex: none; border-radius: 50%; color: #fff; font-weight: 700; font-size: 13px; }
+.dot-ok { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #17b96a; }
+
+/* bottom strip */
+.strip { left: 176px; top: 725px; width: 1391px; height: 237px; padding: 0; background: linear-gradient(180deg, #fbfdff, #f5f9fe); }
+.strip .st { position: absolute; left: 25px; top: 16px; font-size: 25px; font-weight: 650; letter-spacing: -.012em; }
+.strip .ss { position: absolute; left: 25px; top: 52px; font-size: 17px; color: var(--mute); }
+.node { position: absolute; display: flex; align-items: center; gap: 18px; padding: 0 22px; height: 119px; border-radius: 14px; background: #f4f9fe; border: 1.5px solid #dfe9f8; }
+.node .n-t b { display: block; font-size: 19px; font-weight: 650; } .node .n-t span { display: block; font-size: 17px; color: var(--mute); margin-top: 3px; }
+.node .n-t em { display: flex; align-items: center; gap: 9px; font-style: normal; font-size: 17px; color: #14a35f; margin-top: 6px; }
+.node .n-t em i { width: 12px; height: 12px; border-radius: 50%; background: #17b96a; }
+.node > .ic:last-child { margin-left: auto; color: #1d2f5e; }
+.wavebox { position: absolute; left: 330px; top: 52px; width: 730px; height: 180px; }
+.wavelbl { position: absolute; font-size: 15px; color: var(--mute); font-weight: 500; transform: translateX(-50%); white-space: nowrap; }
+.spin { position: absolute; left: 565px; top: 15px; width: 258px; height: 71px; gap: 14px; padding: 0 18px; border-radius: 14px; background: #fff; box-shadow: 0 1px 2px rgba(20,50,110,.04), 0 8px 22px rgba(40,90,190,.08); display: flex; align-items: center; }
+.spin b { display: block; font-size: 17px; font-weight: 650; color: var(--blue); } .spin span { display: block; font-size: 15.5px; color: var(--mute); margin-top: 3px; }
+
+.node .n-t em.amber { color: #b06f08; } .node .n-t em.amber i { background: #f0a21a; }
+
+.bub { border-radius:16px; padding:14px 18px; font-size:18px; line-height:1.4; }
+.bub.u { margin:14px 0 0 auto; width:330px; color:#fff; background:linear-gradient(180deg,#1a6bff,#0058f5); box-shadow:0 8px 16px -8px rgba(0,88,245,.5); border-bottom-right-radius:6px; }
+.bub.a { margin-top:12px; background:#f6f9fe; border:1.5px solid #e4edf9; border-bottom-left-radius:6px; padding:16px 18px 16px; }
+.cites { display:flex; gap:10px; margin-top:12px; }
+.cite { display:inline-flex; align-items:center; gap:8px; height:32px; padding:0 11px; border-radius:9px; background:#e8f0fe; color:var(--blue); font-size:14.5px; font-weight:600; } .cite i { font-style:normal; display:grid; place-items:center; width:20px; height:20px; border-radius:6px; background:var(--blue); color:#fff; font-size:12.5px; }
+.trace { margin-top:12px; padding:2px 18px; } .tr { display:flex; align-items:center; gap:12px; height:42px; font-size:16.5px; border-bottom:1px solid #e8eff9; } .tr:last-child { border-bottom:0; color:var(--mute); } .tr .ok { display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background:#e2f6ec; color:#12a566; } .tr .ok .ic { width:14px; height:14px; stroke-width:2.6; }
+.draft { display:flex; align-items:center; gap:12px; margin-top:16px; font-size:16px; color:var(--mute); } .dots { display:flex; gap:5px; } .dots i { width:8px; height:8px; border-radius:50%; background:#8fb4f5; } .dots i:nth-child(2) { background:#5b94f7; } .dots i:nth-child(3) { background:#0a5cff; }
+.compose { position:absolute; left:26px; right:26px; bottom:26px; height:64px; display:flex; align-items:center; gap:12px; padding:0 8px 0 18px; font-size:17px; color:#6878a6; } .compose .send { margin-left:auto; display:grid; place-items:center; width:48px; height:48px; border-radius:12px; color:#fff; background:linear-gradient(180deg,#1a6bff,#0058f5); } .compose .send .ic { width:22px; height:22px; }
+.seg { display:flex; margin-top:14px; padding:4px; height:46px; border-radius:12px; background:#eef3fb; } .seg span { flex:1; display:grid; place-items:center; border-radius:9px; font-size:16.5px; font-weight:600; color:var(--mute); } .seg span.on { background:#fff; color:var(--blue); box-shadow:0 1px 2px rgba(20,50,110,.08), 0 3px 8px rgba(40,90,190,.1); }
+.doc { display:flex; gap:14px; align-items:flex-start; margin-top:12px; padding:14px 16px; height:112px; } .doc.dim { opacity:.62; }
+.doc .rb { display:grid; place-items:center; width:46px; height:46px; border-radius:12px; background:#eaf2fe; color:var(--blue); flex:none; } .doc .rb .ic { width:23px; height:23px; }
+.doc .t { flex:1; min-width:0; } .doc .t b { display:block; font-size:18px; font-weight:600; white-space:nowrap; } .doc .t span.m { display:block; font-size:15px; color:var(--mute); margin-top:1px; }
+.ln { height:8px; border-radius:4px; background:#e3ebf8; margin-top:9px; } .ln.hl { background:#b9d4ff; }
+.prop { margin-top:16px; padding:18px 20px; } .prop h4 { font-size:19.5px; font-weight:650; } .prop .by { font-size:15.5px; color:var(--mute); margin-top:3px; }
+.diff { margin-top:14px; } .drow { display:flex; align-items:center; gap:10px; height:44px; font-size:17px; border-top:1px solid #e8eff9; } .drow .k { width:74px; color:var(--mute); } .drow s { color:#8a97b3; } .drow .ic { width:18px; height:18px; color:#8a97b3; } .drow b { color:var(--blue); font-weight:650; }
+.note { display:flex; align-items:center; gap:14px; margin-top:16px; padding:0 18px; height:76px; border-radius:14px; background:#eef4ff; border:1.5px solid #dbe7fd; color:#16367a; font-size:16.5px; line-height:1.35; font-weight:500; } .note .ic { color:var(--blue); width:26px; height:26px; }
+.btns { display:flex; gap:12px; position:absolute; left:26px; right:26px; bottom:26px; } .btns .btn { flex:1; }
+</style></head><body><div class="win">
+  <div class="titlebar"><i class="tl r"></i><i class="tl y"></i><i class="tl g"></i></div>
+  <div class="sidebar"><nav class="nav"><a class="on"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14a2 2 0 012 2v8a2 2 0 01-2 2h-7l-5 4v-4H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>Chat</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"/></svg>Sources</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13l2.5-7.5A2 2 0 018.4 4h7.2a2 2 0 011.9 1.5L20 13v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5z"/><path d="M4 13h4l1 2h6l1-2h4"/></svg>Review</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M8 15h8"/></svg>Evals</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>History</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Tools</a><a class=""><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>Settings</a></nav></div>
+  <div class="pill search"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search documents, shipments, or questions…</div>
+  <div class="bell"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 1112 0v5l1.5 2h-15L6 16z"/><path d="M10 20.5a2 2 0 004 0"/></svg><i></i></div><div class="wicon"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M7 6V5a2 2 0 012-2h7"/><circle cx="16.5" cy="14.5" r="1.1"/></svg></div>
+  <div class="pill wallet"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V8l8-4.5L20 8v13"/><path d="M9 21v-5h6v5M9 11h.01M12 11h.01M15 11h.01M9 14h.01M15 14h.01"/></svg>Operations<svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div><div class="avatar-top"><svg width="48" height="48" viewBox="0 0 48 48"><rect width="48" height="48" fill="#d6e5fc"/><circle cx="24" cy="19" r="8.5" fill="#4f93ff"/><path d="M6 46c2-9 9-13.5 18-13.5S40 37 42 46z" fill="#4f93ff"/></svg></div>
+  
+  <div class="card c1"><div class="ch"><span>Assistant</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg></div>
+    <div class="bub u">Why is shipment SH-1042 late at Rotterdam?</div>
+    <div class="bub a">Held at customs on 12 Sep. The carrier manual requires re-booking within 48 hours.
+      <div class="cites"><span class="cite"><i>1</i>Carrier manual</span><span class="cite"><i>2</i>Port delays</span></div></div>
+    <div class="trace field"><div class="tr"><span class="ok"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Searched manuals and emails</div><div class="tr"><span class="ok"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Read 2 sources, kept the citations</div><div class="tr"><span class="dots"><i></i><i></i><i></i></span>Drafting an update for the ERP</div></div>
+    <div class="compose field">Ask about manuals, emails, or shipments…<span class="send"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4 18-7z"/></svg></span></div></div>
+
+  <div class="card c2"><div class="ch"><span>Sources</span><span class="badge info"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Hybrid</span></div>
+    <div class="seg"><span>Vector</span><span>Keyword</span><span class="on">Hybrid</span></div>
+    <div class="doc field "><span class="rb"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><div class="t"><b>Carrier manual v3.pdf</b><span class="m">Section 4.2 · page 18</span><div class="ln " style="width:88%"></div><div class="ln hl" style="width:100%"></div><div class="ln " style="width:62%"></div></div><span class="cite"><i>1</i>Cited</span></div><div class="doc field "><span class="rb"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><div class="t"><b>Email · Port delays</b><span class="m">Thread · 4 messages</span><div class="ln " style="width:92%"></div><div class="ln hl" style="width:70%"></div><div class="ln " style="width:84%"></div></div><span class="cite"><i>2</i>Cited</span></div><div class="doc field dim"><span class="rb"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><div class="t"><b>SOP · Re-booking</b><span class="m">Procedure · 2 pages</span><div class="ln " style="width:76%"></div><div class="ln " style="width:90%"></div><div class="ln " style="width:58%"></div></div><span class="badge mute">Not used</span></div></div>
+
+  <div class="card c3"><div class="ch"><span>Approval queue</span><span class="badge warn"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>1 pending</span></div>
+    <div class="prop field"><h4>Update shipment SH-1042</h4><div class="by">Proposed by the assistant</div>
+      <div class="diff"><div class="drow"><span class="k">ETA</span><s>14 Sep</s><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><b>16 Sep</b></div><div class="drow"><span class="k">Status</span><s>On hold</s><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><b>Re-booked</b></div><div class="drow"><span class="k">Sources</span><span class="cite"><i>1</i>Manual</span><span class="cite"><i>2</i>Email</span></div></div></div>
+    <div class="note"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Read-only by default. Every write to the ERP waits for a person.</div>
+    <div class="btns"><div class="btn p">Approve</div><div class="btn s">Reject</div></div></div>
+
+  <div class="card strip"><div class="st">Pipeline</div><div class="ss">From a question to an approved change, with sources at every step</div>
+   <div class="spin"><svg width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="14" fill="none" stroke="#d3e3fb" stroke-width="4"/><path d="M21 7a14 14 0 0112.1 7" fill="none" stroke="#0a5cff" stroke-width="4" stroke-linecap="round"/><circle cx="33.5" cy="13.5" r="3.6" fill="#0a5cff"/></svg><div><b>Waiting for approval</b><span>No write until approved</span></div></div>
+   <div class="wavebox"><svg width="730" height="180" viewBox="0 0 730 180">
+   <defs><linearGradient id="ctA" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#8cc4ff"/><stop offset="1" stop-color="#3b8dff"/></linearGradient>
+   <linearGradient id="ctB" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#8cc4ff"/><stop offset="1" stop-color="#3b8dff"/></linearGradient>
+   <linearGradient id="ctC" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#8cc4ff"/><stop offset="1" stop-color="#3b8dff"/></linearGradient>
+   <linearGradient id="cl" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2a7bff"/><stop offset="1" stop-color="#0a4fe0"/></linearGradient>
+   <linearGradient id="cr" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0a5cff"/><stop offset="1" stop-color="#0838b8"/></linearGradient>
+   <linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#9fd0ff" stop-opacity="0"/><stop offset=".12" stop-color="#9fd0ff" stop-opacity=".75"/><stop offset=".88" stop-color="#9fd0ff" stop-opacity=".75"/><stop offset="1" stop-color="#9fd0ff" stop-opacity="0"/></linearGradient>
+   <filter id="bl" x="-5%" y="-60%" width="110%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+   <filter id="sh" x="-40%" y="-40%" width="180%" height="190%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#0a5cff" flood-opacity=".32"/></filter></defs>
+   <path d="M0 91.6L6 93.9L12 96.1L18 98.0L24 99.7L30 101.1L36 102.3L42 103.2L48 103.7L54 104.0L60 103.9L66 103.6L72 102.9L78 102.0L84 100.7L90 99.2L96 97.4L102 95.4L108 93.2L114 90.8L120 88.3L126 85.6L132 82.8L138 80.0L144 77.2L150 74.4L156 71.6L162 68.9L168 66.3L174 63.8L180 61.5L186 59.4L192 57.6L198 55.9L204 54.6L210 53.5L216 52.7L222 52.2L228 52.0L234 52.1L240 52.6L246 53.3L252 54.3L258 55.7L264 57.2L270 59.1L276 61.1L282 63.4L288 65.8L294 68.4L300 71.1L306 73.9L312 76.7L318 79.5L324 82.3L330 85.1L336 87.8L342 90.4L348 92.8L354 95.0L360 97.1L366 98.9L372 100.4L378 101.7L384 102.8L390 103.5L396 103.9L402 104.0L408 103.8L414 103.3L420 102.5L426 101.4L432 100.0L438 98.3L444 96.4L450 94.3L456 92.0L462 89.6L468 87.0L474 84.2L480 81.4L486 78.6L492 75.8L498 73.0L504 70.2L510 67.6L516 65.0L522 62.6L528 60.4L534 58.5L540 56.7L546 55.2L552 54.0L558 53.0L564 52.4L570 52.1L576 52.0L582 52.3L588 52.9L594 53.8L600 55.0L606 56.4L612 58.1L618 60.1L624 62.2L630 64.6L636 67.1L642 69.7L648 72.5L654 75.3L660 78.1L666 80.9L672 83.7L678 86.5L684 89.1L690 91.6L696 93.9L702 96.1L708 98.0L714 99.7L720 101.1L726 102.3" stroke="url(#gl)" stroke-width="30" fill="none" filter="url(#bl)"/>
+   <path d="M0 91.6L6 93.9L12 96.1L18 98.0L24 99.7L30 101.1L36 102.3L42 103.2L48 103.7L54 104.0L60 103.9L66 103.6L72 102.9L78 102.0L84 100.7L90 99.2L96 97.4L102 95.4L108 93.2L114 90.8L120 88.3L126 85.6L132 82.8L138 80.0L144 77.2L150 74.4L156 71.6L162 68.9L168 66.3L174 63.8L180 61.5L186 59.4L192 57.6L198 55.9L204 54.6L210 53.5L216 52.7L222 52.2L228 52.0L234 52.1L240 52.6L246 53.3L252 54.3L258 55.7L264 57.2L270 59.1L276 61.1L282 63.4L288 65.8L294 68.4L300 71.1L306 73.9L312 76.7L318 79.5L324 82.3L330 85.1L336 87.8L342 90.4L348 92.8L354 95.0L360 97.1L366 98.9L372 100.4L378 101.7L384 102.8L390 103.5L396 103.9L402 104.0L408 103.8L414 103.3L420 102.5L426 101.4L432 100.0L438 98.3L444 96.4L450 94.3L456 92.0L462 89.6L468 87.0L474 84.2L480 81.4L486 78.6L492 75.8L498 73.0L504 70.2L510 67.6L516 65.0L522 62.6L528 60.4L534 58.5L540 56.7L546 55.2L552 54.0L558 53.0L564 52.4L570 52.1L576 52.0L582 52.3L588 52.9L594 53.8L600 55.0L606 56.4L612 58.1L618 60.1L624 62.2L630 64.6L636 67.1L642 69.7L648 72.5L654 75.3L660 78.1L666 80.9L672 83.7L678 86.5L684 89.1L690 91.6L696 93.9L702 96.1L708 98.0L714 99.7L720 101.1L726 102.3" stroke="url(#gl)" stroke-width="9" fill="none" opacity=".7"/>
+   <path d="M0 91.6L6 93.9L12 96.1L18 98.0L24 99.7L30 101.1L36 102.3L42 103.2L48 103.7L54 104.0L60 103.9L66 103.6L72 102.9L78 102.0L84 100.7L90 99.2L96 97.4L102 95.4L108 93.2L114 90.8L120 88.3L126 85.6L132 82.8L138 80.0L144 77.2L150 74.4L156 71.6L162 68.9L168 66.3L174 63.8L180 61.5L186 59.4L192 57.6L198 55.9L204 54.6L210 53.5L216 52.7L222 52.2L228 52.0L234 52.1L240 52.6L246 53.3L252 54.3L258 55.7L264 57.2L270 59.1L276 61.1L282 63.4L288 65.8L294 68.4L300 71.1L306 73.9L312 76.7L318 79.5L324 82.3L330 85.1L336 87.8L342 90.4L348 92.8L354 95.0L360 97.1L366 98.9L372 100.4L378 101.7L384 102.8L390 103.5L396 103.9L402 104.0L408 103.8L414 103.3L420 102.5L426 101.4L432 100.0L438 98.3L444 96.4L450 94.3L456 92.0L462 89.6L468 87.0L474 84.2L480 81.4L486 78.6L492 75.8L498 73.0L504 70.2L510 67.6L516 65.0L522 62.6L528 60.4L534 58.5L540 56.7L546 55.2L552 54.0L558 53.0L564 52.4L570 52.1L576 52.0L582 52.3L588 52.9L594 53.8L600 55.0L606 56.4L612 58.1L618 60.1L624 62.2L630 64.6L636 67.1L642 69.7L648 72.5L654 75.3L660 78.1L666 80.9L672 83.7L678 86.5L684 89.1L690 91.6L696 93.9L702 96.1L708 98.0L714 99.7L720 101.1L726 102.3" stroke="#fff" stroke-width="2.4" fill="none" opacity=".95"/>
+   <circle cx="45" cy="103.5" r="8" fill="#0a5cff" stroke="#fff" stroke-width="2.5"/><circle cx="250" cy="54.0" r="8" fill="#0a5cff" stroke="#fff" stroke-width="2.5"/><circle cx="480" cy="81.4" r="8" fill="#0a5cff" stroke="#fff" stroke-width="2.5"/><circle cx="670" cy="82.8" r="8" fill="#0a5cff" stroke="#fff" stroke-width="2.5"/>
+   <g transform="translate(113 56.44665264126472)" filter="url(#sh)">
+  <polygon points="22,1 43,12.5 22,24 1,12.5" fill="url(#ctA)"/><polygon points="1,12.5 22,24 22,49 1,37" fill="url(#cl)"/><polygon points="43,12.5 22,24 22,49 43,37" fill="url(#cr)"/>
+  <path d="M1 12.5L22 24l21-11.5" stroke="rgba(255,255,255,.55)" stroke-width="1" fill="none"/></g><g transform="translate(343 73.59461353003144)" filter="url(#sh)">
+  <polygon points="22,1 43,12.5 22,24 1,12.5" fill="url(#ctB)"/><polygon points="1,12.5 22,24 22,49 1,37" fill="url(#cl)"/><polygon points="43,12.5 22,24 22,49 43,37" fill="url(#cr)"/>
+  <path d="M1 12.5L22 24l21-11.5" stroke="rgba(255,255,255,.55)" stroke-width="1" fill="none"/></g><g transform="translate(568 28.158050903075278)" filter="url(#sh)">
+  <polygon points="22,1 43,12.5 22,24 1,12.5" fill="url(#ctC)"/><polygon points="1,12.5 22,24 22,49 1,37" fill="url(#cl)"/><polygon points="43,12.5 22,24 22,49 43,37" fill="url(#cr)"/>
+  <path d="M1 12.5L22 24l21-11.5" stroke="rgba(255,255,255,.55)" stroke-width="1" fill="none"/></g>
+  </svg><span class="wavelbl" style="left:135px;top:117px">Retriever</span><span class="wavelbl" style="left:365px;top:135px">Agent</span><span class="wavelbl" style="left:590px;top:89px">Citations</span></div><div class="node" style="left:25px;top:92px;width:317px"><span class="av" style="width:62px;height:62px;background:#eaf2fe;color:#0a5cff"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14a2 2 0 012 2v8a2 2 0 01-2 2h-7l-5 4v-4H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg></span><div class="n-t"><b>Question</b><span>Natural language</span><em class=""><i></i>Received</em></div><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div><div class="node" style="left:1040px;top:88px;width:327px"><span class="av" style="width:62px;height:62px;background:#fff3da;color:#b06f08"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6L12 3z"/><path d="M8.6 12l2.4 2.4 4.4-4.8"/></svg></span><div class="n-t"><b>Approval</b><span>A person signs off</span><em class="amber"><i></i>Waiting</em></div><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div></div>
+  </div></body></html>

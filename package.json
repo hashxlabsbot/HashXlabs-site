@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "shots": "node scripts/make-shots.mjs",
+    "shots:render": "node scripts/render-shots.mjs",
+    "stream": "node scripts/make-stream.mjs"
   },
   "dependencies": {
     "next": "16.2.9",
