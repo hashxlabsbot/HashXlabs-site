@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import Reveal from "@/components/Reveal";
 import WorkShowcase from "@/components/work/WorkShowcase";
@@ -8,9 +10,18 @@ import Why from "@/components/home/Why";
 import StreamHero from "@/components/home/StreamHero";
 import TechBento from "@/components/home/TechBento";
 import Engagements from "@/components/home/Engagements";
+import Token2049Band from "@/components/home/Token2049Band";
 import Accordion from "@/components/ui/Accordion";
 import { ButtonLink, CTASection, Section, SectionHeader } from "@/components/ui";
 import { CHAINS, FAQS, PROCESS } from "@/content/company";
+
+export const metadata: Metadata = pageMeta({
+  title: "HashX Labs — Blockchain & AI engineering",
+  absoluteTitle: true,
+  description:
+    "HashX Labs designs, builds and secures blockchain and AI systems: smart contracts, DeFi, RWA tokenization, wallets and AI agents, tested from first commit to mainnet.",
+  path: "/",
+});
 
 export default function Home() {
   return (
@@ -37,6 +48,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ── TOKEN2049 Singapore, 7–10 Oct 2026 (temporary: remove after the event) ── */}
+      <Token2049Band />
 
       {/* ── Services: pinned horizontal rail (components/home/ServicesRail) ── */}
       <ServicesRail />

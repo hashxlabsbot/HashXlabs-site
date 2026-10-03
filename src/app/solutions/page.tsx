@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import Icon, { type IconName } from "@/components/icons/Icon";
@@ -6,10 +7,12 @@ import { Arrow, ButtonLink, CTASection, PageHeader, Section, SectionHeader } fro
 import { AUDIENCES } from "@/content/company";
 import { SOLUTIONS } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Solutions",
-  description: "DeFi protocols, tokenized assets, custody and wallets, tokens and governance, and AI on real systems.",
-};
+  description:
+    "DeFi protocols, tokenized assets, custody and wallets, tokens and governance, and AI on real systems.",
+  path: "/solutions",
+});
 
 const ICONS: IconName[] = ["chart", "tokenize", "lock", "vote", "ai"];
 

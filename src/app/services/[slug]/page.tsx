@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { pageMeta } from "@/lib/seo";
 import CoreServicePage from "@/components/pages/CoreServicePage";
 import CapabilityPage from "@/components/pages/CapabilityPage";
 import { SERVICES } from "@/content/site";
@@ -17,9 +18,9 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const s = SERVICES.find((x) => x.slug === slug);
-  if (s) return { title: s.title, description: s.short };
+  if (s) return pageMeta({ title: s.title, description: s.short, path: `/services/${slug}` });
   const m = PAGE_ITEMS.find(({ item }) => item.slug === slug);
-  return m ? { title: m.item.t, description: m.item.lead } : {};
+  return m ? pageMeta({ title: m.item.t, description: m.item.lead, path: `/services/${slug}` }) : {};
 }
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {

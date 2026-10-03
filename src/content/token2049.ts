@@ -11,6 +11,11 @@ import type { IconName } from "@/components/icons/Icon";
 export const EVENT = {
   name: "TOKEN2049 Singapore",
   venue: "Marina Bay Sands",
+  address: { street: "10 Bayfront Avenue", postcode: "018956", city: "Singapore", country: "SG" },
+  /** TOKEN2049 Week side events across the city. */
+  week: "5–11 October 2026",
+  /** The organiser's own page for the event. */
+  officialUrl: "https://token2049.com/singapore/",
   conference: "7–8 October 2026",
   ourDates: "7–10 October 2026",
   /** Doors open on conference day 1 (SGT is UTC+8, no daylight saving). */
@@ -152,6 +157,10 @@ export const TOPICS: { id: string; icon: IconName; title: string; short: string;
 export const WORK_IDS = ["amm", "rwa", "custody"];
 
 export const T49_FAQS: [string, string][] = [
+  [
+    "When and where is TOKEN2049 Singapore 2026?",
+    "The conference runs on Wednesday 7 and Thursday 8 October 2026 at Marina Bay Sands, 10 Bayfront Avenue, Singapore, from 07:30 to 18:00 each day. TOKEN2049 Week side events run across the city from 5 to 11 October. HashX Labs is in Singapore from 7 to 10 October.",
+  ],
   [
     "Do I need a TOKEN2049 pass to meet you?",
     "No. On the conference days we can meet inside Marina Bay Sands if you have a pass, or anywhere nearby if you don't. On the other days we come to you.",

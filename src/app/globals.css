@@ -517,6 +517,11 @@ a.card:hover, .card-hover:hover {
   box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 2px 6px -2px rgba(0,87,217,.5);
 }
 .hxs-badge svg { width: 13px; height: 16px; }
+/* During TOKEN2049 the badge is a link to /token2049 (components/home/StreamHero). */
+.hxs-badge-link { color: var(--t-hi); text-decoration: none; transition: border-color .2s, box-shadow .25s var(--ease), translate .25s var(--ease); }
+.hxs-badge-link:hover { border-color: rgba(0,87,217,.45); box-shadow: 0 1px 2px rgba(11,18,32,.06), 0 8px 22px -8px rgba(0,87,217,.35); translate: 0 -1px; }
+.hxs-badge-arr { color: var(--signal); transition: transform .2s var(--ease); }
+.hxs-badge-link:hover .hxs-badge-arr { transform: translateX(3px); }
 .hxs-h1 {
   margin-top: clamp(16px, 2.8vh, 28px);
   font-family: var(--font-display), system-ui, sans-serif; font-weight: 800; text-transform: uppercase;
@@ -2333,3 +2338,52 @@ html.hx-intro:not(.hx-intro-go):not(.hx-intro-skip) .t49-hero-img { animation-pl
     .t49-hero-img { animation: t49Settle 4s var(--expo) both, t49Par linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100vh; }
   }
 }
+
+/* ── TOKEN2049 home band (components/home/Token2049Band.tsx) ───────────
+   The Marina Bay photo fills the card; a navy scrim from the left keeps the
+   copy legible. Phones: photo on top, copy below. Temporary, like the band. */
+@layer components {
+  .t49-band-wrap { padding-block: 56px 8px; }
+  @media (min-width: 1024px) { .t49-band-wrap { padding-block: 88px 24px; } }
+  .t49-band {
+    position: relative; isolation: isolate; overflow: hidden; overflow: clip; border-radius: 24px;
+    background: #050914; color: #fff;
+    box-shadow: 0 30px 80px -40px rgba(0,40,120,.55);
+  }
+  .t49-band-img {
+    position: absolute; z-index: -2; inset: 0 0 auto 0; width: 100%; height: 300px;
+    object-fit: cover; object-position: 60% 30%;
+    transition: scale 1.2s var(--ease);
+  }
+  .t49-band:hover .t49-band-img { scale: 1.03; }
+  .t49-band-scrim {
+    position: absolute; z-index: -1; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(5,9,20,.05) 0%, rgba(5,9,20,.35) 170px, #050914 300px);
+  }
+  .t49-band-body { position: relative; padding: 230px 22px 28px; }
+  .t49-band-title { margin-top: 20px; color: #fff; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.04; letter-spacing: -.035em; }
+  .t49-band-title span {
+    background: linear-gradient(100deg, #8dbcff 0%, #8cf4ff 55%, #6aa8ff 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .t49-band-lead { margin-top: 16px; max-width: 32rem; font-size: 16.5px; line-height: 1.6; color: rgba(255,255,255,.78); }
+  .t49-band-ctas { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .t49-band-meta { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; font-size: 13.5px; color: rgba(255,255,255,.7); }
+  .t49-band-fact { display: inline-flex; align-items: center; gap: 8px; }
+  .t49-band-fact svg { color: #8cf4ff; }
+  .t49-mini { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; color: #fff; }
+  .t49-mini i { width: 8px; height: 8px; border-radius: 50%; background: #8cf4ff; box-shadow: 0 0 0 3px rgba(140,244,255,.18); }
+  .t49-mini i.is-live { background: #4ade80; box-shadow: 0 0 0 3px rgba(74,222,128,.2); animation: t49Live 1.6s ease-in-out infinite; }
+  @media (min-width: 1024px) {
+    .t49-band { min-height: 440px; display: flex; align-items: center; }
+    .t49-band-img { inset: 0 0 0 auto; width: 66%; height: 100%; object-position: 50% 32%; }
+    .t49-band-scrim {
+      background:
+        linear-gradient(90deg, #050914 34%, rgba(5,9,20,.82) 46%, rgba(5,9,20,.25) 66%, rgba(5,9,20,0) 82%),
+        radial-gradient(60% 80% at 15% 100%, rgba(0,87,217,.32), transparent 70%);
+    }
+    .t49-band-body { padding: 56px 56px 52px; max-width: 640px; }
+  }
+}
+@keyframes t49Live { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .t49-mini i.is-live { animation: none; } .t49-band-img { transition: none; } }

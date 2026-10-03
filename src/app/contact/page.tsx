@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import Icon from "@/components/icons/Icon";
 import ContactForm from "@/components/ContactForm";
 import { PageHeader, Section } from "@/components/ui";
 import { COMPANY } from "@/content/company";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Contact",
-  description: "Tell us about your blockchain or AI project. An engineer who would work on it will reply.",
-};
+  description:
+    "Tell us about your blockchain or AI project. An engineer who would work on it will reply.",
+  path: "/contact",
+});
 
 const NEXT = [
   ["An engineer replies", "With questions about your product, not a sales deck."],

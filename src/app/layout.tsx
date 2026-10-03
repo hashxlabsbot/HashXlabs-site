@@ -28,15 +28,18 @@ const mono = Martian_Mono({
   weight: ["400", "500", "600"],
 });
 import ClientReady from "@/components/ClientReady";
+import { SITE_GRAPH, SITE_NAME, SITE_URL, jsonLd } from "@/lib/seo";
 import Intro from "@/components/intro/Intro";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "HashX Labs — Blockchain & AI engineering",
     template: "%s — HashX Labs",
   },
   description:
     "HashX Labs designs, builds and secures blockchain and AI systems: smart contracts, DeFi, tokenization, wallets, cross-chain infrastructure and AI agents. Specification and tests first, from first commit to mainnet.",
+  applicationName: SITE_NAME,
   keywords: [
     "Web3 Development Company",
     "Blockchain Engineering Services",
@@ -44,14 +47,21 @@ export const metadata: Metadata = {
     "Smart Contract Security Audit",
     "Enterprise AI Agents",
     "DeFi Protocol Development",
-    "HashX Labs"
-  ].join(", "),
+    "HashX Labs",
+  ],
+  // Pages set their own canonical and openGraph via pageMeta() (lib/seo.ts).
   openGraph: {
     title: "HashX Labs — Blockchain & AI engineering",
-    description:
-      "Smart contracts, Web3 platforms and AI systems, built and tested by senior engineers.",
-    siteName: "HashX Labs",
+    description: "Smart contracts, Web3 platforms and AI systems, built and tested by senior engineers.",
+    siteName: SITE_NAME,
     type: "website",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
 };
 
@@ -71,6 +81,7 @@ export default function RootLayout({
     // <html> before React hydrates (components/intro/Intro.tsx).
     <html lang="en" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen antialiased">
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(SITE_GRAPH)} />
         <Intro />
         <ClientReady />
         {children}

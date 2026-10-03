@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import Icon from "@/components/icons/Icon";
@@ -6,11 +7,12 @@ import { Arrow, ButtonLink, CheckList, CTASection, PageHeader, Section, SectionH
 import { PROCESS, SERVICE_AREAS, sectionAnchor } from "@/content/company";
 import { MENU, itemHref } from "@/content/menu";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Services",
   description:
     "Blockchain development, smart contract security, RWA tokenization, DeFi and exchanges, stablecoins and payments, and AI development.",
-};
+  path: "/services",
+});
 
 const AREA_INTRO: Record<string, string> = {
   blockchain: "Contracts, chains and the infrastructure around them, on EVM networks, Solana and beyond.",

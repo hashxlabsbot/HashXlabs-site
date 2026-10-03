@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import Icon from "@/components/icons/Icon";
 import Shot from "@/components/Shot";
 import { Arrow, ButtonLink, Chips, CTASection, PageHeader, Section } from "@/components/ui";
 import { WORK } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: "Work",
-  description: "Selected engagements: DeFi, tokenized assets, custody and applied AI. Client names withheld under NDA.",
-};
+export const metadata: Metadata = pageMeta({
+  title: "Case studies",
+  description:
+    "Selected engagements: DeFi, tokenized assets, custody and applied AI. Client names withheld under NDA.",
+  path: "/case-studies",
+});
 
 export default function WorkPage() {
   return (
