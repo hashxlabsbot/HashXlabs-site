@@ -9,7 +9,9 @@
     "lint": "eslint",
     "shots": "node scripts/make-shots.mjs",
     "shots:render": "node scripts/render-shots.mjs",
-    "stream": "node scripts/make-stream.mjs"
+    "stream": "node scripts/make-stream.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "marina": "node scripts/make-marina.mjs"
   },
   "dependencies": {
     "next": "16.2.9",

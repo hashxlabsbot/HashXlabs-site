@@ -8,6 +8,7 @@ const COMPANY_LINKS = [
   { href: "/solutions", label: "Solutions" },
   { href: "/lab", label: "Invariant Lab" },
   { href: "/token2049", label: "TOKEN2049 Singapore" },
+  { href: "/token2049/guide", label: "TOKEN2049 2026 guide" },
   { href: "/contact", label: "Contact" },
 ];
 

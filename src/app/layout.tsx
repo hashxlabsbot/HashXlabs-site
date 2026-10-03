@@ -58,6 +58,12 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: { card: "summary_large_image" },
+  // Search Console / Bing Webmaster ownership tags, set in the hosting
+  // dashboard (read at build time). Not needed if you verify by DNS instead.
+  verification: {
+    ...(process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } } : {}),
+  },
   robots: {
     index: true,
     follow: true,

@@ -24,7 +24,6 @@ export default function Token2049Band() {
               width={1280}
               height={987}
               alt="Marina Bay Sands, Singapore, where TOKEN2049 takes place"
-              loading="lazy"
               decoding="async"
             />
             <div className="t49-band-scrim" aria-hidden="true" />
@@ -54,6 +53,10 @@ export default function Token2049Band() {
                   <Icon name="chat" className="h-4 w-4" />
                   Video calls if you are not in town
                 </span>
+                <Link href="/token2049/guide" className="t49-band-fact t49-band-guide">
+                  <Icon name="document" className="h-4 w-4" />
+                  TOKEN2049 Singapore 2026 guide
+                </Link>
               </div>
             </div>
           </div>

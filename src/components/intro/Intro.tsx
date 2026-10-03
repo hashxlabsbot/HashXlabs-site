@@ -27,8 +27,11 @@ function introScript(exitMs: number) {
   let timers: number[] = [];
   let done = false;
   // Not for reduced motion, nor for a tab opened in the background (it would
-  // finish unseen and then hold the page on a static frame).
+  // finish unseen and then hold the page on a static frame). Not on the
+  // TOKEN2049 pages either: people land there straight from search, and the
+  // ~3 s hold pushed the main text's paint (LCP) to 4.5 s in Lighthouse.
   if (!root || !window.matchMedia || matchMedia("(prefers-reduced-motion: reduce)").matches || d.visibilityState === "hidden") return;
+  if (/^\/token2049(\/|$)/.test(location.pathname)) return;
   cl.add("hx-intro");
 
   function later(fn: () => void, ms: number) {

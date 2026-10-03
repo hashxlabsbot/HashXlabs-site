@@ -18,6 +18,7 @@ const PAGES: Entry[] = [
   { title: "About", sub: "Page", href: "/about" },
   { title: "Invariant Lab", sub: "Interactive demo", href: "/lab" },
   { title: "TOKEN2049 Singapore", sub: "Meet us, 7–10 Oct 2026", href: "/token2049" },
+  { title: "TOKEN2049 Singapore 2026 guide", sub: "Dates, venue, MRT, side events", href: "/token2049/guide" },
   { title: "Contact", sub: "Start a project", href: "/contact" },
 ];
 
