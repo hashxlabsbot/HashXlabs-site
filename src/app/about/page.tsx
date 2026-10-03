@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import Icon from "@/components/icons/Icon";
 import { Arrow, ButtonLink, CTASection, PageHeader, Section, SectionHeader } from "@/components/ui";
 import { PRINCIPLES, PROCESS, REASONS, WONT } from "@/content/company";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "About",
-  description: "HashX Labs is a blockchain and AI engineering company. Every engagement is led by senior engineers and built on a written specification.",
-};
+  description:
+    "HashX Labs is a blockchain and AI engineering company. Every engagement is led by senior engineers and built on a written specification.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

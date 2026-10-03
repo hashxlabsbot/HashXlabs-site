@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import InvariantLab from "@/components/InvariantLab";
 import { CTASection, PageHeader, Section } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Invariant Lab",
-  description: "Break a vault, then fix it: an interactive simulation of how we fuzz smart contracts.",
-};
+  description:
+    "Break a vault, then fix it: an interactive simulation of how we fuzz smart contracts.",
+  path: "/lab",
+});
 
 const TAKEAWAYS = [
   ["Invariants, not examples", "A test that says \"this input works\" proves little. A property that must hold for every call sequence is what catches the bug."],

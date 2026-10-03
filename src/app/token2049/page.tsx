@@ -14,27 +14,114 @@ import PickButton from "@/components/token2049/PickButton";
 import DayState from "@/components/token2049/DayState";
 import { WORK } from "@/content/site";
 import { DAYS, EVENT, T49_FAQS, TOPICS, WORK_IDS } from "@/content/token2049";
+import { ORG_ID, SITE_URL, jsonLd, pageMeta } from "@/lib/seo";
 
 const DESCRIPTION =
-  "HashX Labs is in Singapore for TOKEN2049, 7–10 October 2026. Book 30 minutes with a blockchain engineer at Marina Bay Sands, anywhere in the city, or on video.";
+  "Meet HashX Labs at TOKEN2049 Singapore 2026, 7–10 October. Book 30 minutes with a blockchain engineer at Marina Bay Sands, around Singapore or on video.";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.hashxlabs.com"),
-  title: "TOKEN2049 Singapore 2026",
+export const metadata: Metadata = pageMeta({
+  title: "TOKEN2049 Singapore 2026: Meet HashX Labs, 7–10 October",
+  absoluteTitle: true,
+  ogTitle: "Meet HashX Labs at TOKEN2049 Singapore (7–10 Oct 2026)",
   description: DESCRIPTION,
-  alternates: { canonical: "/token2049" },
-  openGraph: {
-    title: "Meet HashX Labs at TOKEN2049 Singapore",
-    description: DESCRIPTION,
-    siteName: "HashX Labs",
-    type: "website",
-    url: "/token2049",
+  path: "/token2049",
+  image: { url: "/token2049/opengraph-image", alt: "HashX Labs at TOKEN2049 Singapore, 7–10 October 2026" },
+  keywords: [
+    "TOKEN2049",
+    "TOKEN2049 Singapore",
+    "TOKEN2049 Singapore 2026",
+    "TOKEN2049 Week",
+    "TOKEN2049 side events",
+    "Marina Bay Sands crypto conference",
+    "blockchain development company Singapore",
+    "smart contract audit TOKEN2049",
+    "meet blockchain developers Singapore",
+    "HashX Labs",
+  ],
+});
+
+/* Structured data. The TOKEN2049 conference is described as what it is (an
+   event organised by TOKEN2049, at its own URL); what HashX Labs offers is a
+   separate event: meetings during the week, with the conference as its
+   superEvent. Nothing here claims sponsorship, a booth or affiliation. */
+const PAGE_URL = `${SITE_URL}/token2049`;
+const venue = {
+  "@type": "Place",
+  name: EVENT.venue,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: EVENT.address.street,
+    postalCode: EVENT.address.postcode,
+    addressLocality: EVENT.address.city,
+    addressCountry: EVENT.address.country,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Meet HashX Labs at TOKEN2049 Singapore",
-    description: DESCRIPTION,
-  },
+};
+const conference = {
+  "@type": "Event",
+  "@id": `${PAGE_URL}#token2049`,
+  name: "TOKEN2049 Singapore 2026",
+  description: `Crypto and Web3 conference at ${EVENT.venue}, Singapore, on ${EVENT.conference}, with TOKEN2049 Week side events across the city from ${EVENT.week}.`,
+  image: [`${SITE_URL}/img/marina-og.jpg`],
+  startDate: EVENT.opens,
+  endDate: EVENT.closes,
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  location: venue,
+  url: EVENT.officialUrl,
+  organizer: { "@type": "Organization", name: "TOKEN2049", url: "https://token2049.com" },
+};
+const STRUCTURED = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": PAGE_URL,
+      url: PAGE_URL,
+      name: "TOKEN2049 Singapore 2026: Meet HashX Labs, 7–10 October",
+      description: DESCRIPTION,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${PAGE_URL}#token2049` },
+      primaryImageOfPage: `${SITE_URL}/img/marina-1920.webp`,
+      breadcrumb: { "@id": `${PAGE_URL}#breadcrumb` },
+      inLanguage: "en",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${PAGE_URL}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "TOKEN2049 Singapore 2026", item: PAGE_URL },
+      ],
+    },
+    conference,
+    {
+      "@type": "BusinessEvent",
+      "@id": `${PAGE_URL}#meetings`,
+      name: "Meet HashX Labs at TOKEN2049 Singapore 2026",
+      description: DESCRIPTION,
+      startDate: DAYS[0].from,
+      endDate: EVENT.leaves,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
+      location: [venue, { "@type": "VirtualLocation", url: `${PAGE_URL}#meet` }],
+      image: [`${SITE_URL}/img/marina-og.jpg`, `${SITE_URL}/img/marina-1920.webp`],
+      organizer: { "@id": ORG_ID },
+      superEvent: { "@id": `${PAGE_URL}#token2049` },
+      offers: {
+        "@type": "Offer",
+        price: 0,
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: `${PAGE_URL}#meet`,
+      },
+      url: PAGE_URL,
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${PAGE_URL}#faq`,
+      mainEntity: T49_FAQS.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+    },
+  ],
 };
 
 const MARQUEE = ["TOKEN2049 Singapore", "07 → 10.10.2026", "Marina Bay Sands", EVENT.coords, "Smart contracts", "RWA", "Security", "AI agents"];
@@ -44,6 +131,7 @@ export default function Token2049Page() {
 
   return (
     <SiteShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(STRUCTURED)} />
       {/* ── Hero: copy over the Marina Bay photo, countdown bar along the bottom ── */}
       <section className="t49-hero" aria-labelledby="t49-title">
         <div className="t49-hero-media" aria-hidden="true">
@@ -56,7 +144,7 @@ export default function Token2049Page() {
             sizes="(min-width: 1024px) 80vw, 100vw"
             width={1920}
             height={1481}
-            alt=""
+            alt="Aerial view of Marina Bay Sands, Singapore, the venue of TOKEN2049 Singapore 2026, at sunset"
             fetchPriority="high"
             decoding="async"
           />
@@ -66,13 +154,15 @@ export default function Token2049Page() {
         <div className="container-x t49-hero-top">
           <div className="t49-hero-copy">
             <p className="t49-badge hx-a" style={{ "--dl": ".15s" } as CSSProperties}>
-              <span className="t49-badge-k">TOKEN2049</span>
-              <span>Singapore · {EVENT.conference} · {EVENT.venue}</span>
+              <span className="t49-badge-k">Singapore 2026</span>
+              <span>
+                {EVENT.conference.replace(" 2026", "")} · {EVENT.venue}
+              </span>
             </p>
             <h1 id="t49-title" className="t49-title">
-              <Words text="See you in" load />{" "}
+              <Words text="See you at" load />{" "}
               <span className="t49-grad">
-                <Words text="Singapore." start={3} load />
+                <Words text="TOKEN2049." start={3} load />
               </span>
             </h1>
             <p className="t49-lead hx-a" style={{ "--dl": ".55s" } as CSSProperties}>

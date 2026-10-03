@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ImageStreamHero, type StreamImage } from "@/components/ui/image-stream-hero";
 
 // Home hero: the copy sits over an image corridor (components/ui/image-stream-hero).
@@ -34,7 +35,10 @@ export default function StreamHero() {
       <ImageStreamHero images={STREAM} axis={56} className="hxs-stream">
         <div className="hxs-copy">
           <div className="hxs-top">
-            <p className="hxs-badge hx-a">
+            {/* During the TOKEN2049 week the badge links to the event page. Afterwards,
+                restore the plain badge: <p className="hxs-badge hx-a"> with the text
+                "Blockchain engineering, security-first". */}
+            <Link href="/token2049" className="hxs-badge hxs-badge-link hx-a">
               <i aria-hidden="true">
                 <svg viewBox="5 1 14 22" preserveAspectRatio="none">
                   <path
@@ -46,8 +50,11 @@ export default function StreamHero() {
                   />
                 </svg>
               </i>
-              Blockchain engineering, security-first
-            </p>
+              Meet us at TOKEN2049 Singapore · 7–10 Oct
+              <span className="hxs-badge-arr" aria-hidden="true">
+                →
+              </span>
+            </Link>
             <h1 id="hx-title" className="hxs-h1">
               <span className="hx-a hx-wipe">Smart contracts that</span>{" "}
               <span className="hx-a hx-wipe">hold up.</span>
