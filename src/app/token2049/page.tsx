@@ -13,7 +13,8 @@ import MeetingPass from "@/components/token2049/MeetingPass";
 import PickButton from "@/components/token2049/PickButton";
 import DayState from "@/components/token2049/DayState";
 import { WORK } from "@/content/site";
-import { DAYS, EVENT, T49_FAQS, TOPICS, WORK_IDS } from "@/content/token2049";
+import { DAYS, EVENT, GUIDE_UPDATED, T49_FAQS, TOPICS, WORK_IDS } from "@/content/token2049";
+import { CONFERENCE, CONFERENCE_ID, GUIDE_URL, T49_URL, VENUE, faqPage } from "@/lib/token2049/schema";
 import { ORG_ID, SITE_URL, jsonLd, pageMeta } from "@/lib/seo";
 
 const DESCRIPTION =
@@ -40,36 +41,10 @@ export const metadata: Metadata = pageMeta({
   ],
 });
 
-/* Structured data. The TOKEN2049 conference is described as what it is (an
-   event organised by TOKEN2049, at its own URL); what HashX Labs offers is a
-   separate event: meetings during the week, with the conference as its
-   superEvent. Nothing here claims sponsorship, a booth or affiliation. */
-const PAGE_URL = `${SITE_URL}/token2049`;
-const venue = {
-  "@type": "Place",
-  name: EVENT.venue,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: EVENT.address.street,
-    postalCode: EVENT.address.postcode,
-    addressLocality: EVENT.address.city,
-    addressCountry: EVENT.address.country,
-  },
-};
-const conference = {
-  "@type": "Event",
-  "@id": `${PAGE_URL}#token2049`,
-  name: "TOKEN2049 Singapore 2026",
-  description: `Crypto and Web3 conference at ${EVENT.venue}, Singapore, on ${EVENT.conference}, with TOKEN2049 Week side events across the city from ${EVENT.week}.`,
-  image: [`${SITE_URL}/img/marina-og.jpg`],
-  startDate: EVENT.opens,
-  endDate: EVENT.closes,
-  eventStatus: "https://schema.org/EventScheduled",
-  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-  location: venue,
-  url: EVENT.officialUrl,
-  organizer: { "@type": "Organization", name: "TOKEN2049", url: "https://token2049.com" },
-};
+/* Structured data. The conference itself comes from lib/token2049/schema
+   (shared with the guide); what HashX Labs offers is a separate event:
+   meetings during the week, with the conference as its superEvent. */
+const PAGE_URL = T49_URL;
 const STRUCTURED = {
   "@context": "https://schema.org",
   "@graph": [
@@ -80,9 +55,12 @@ const STRUCTURED = {
       name: "TOKEN2049 Singapore 2026: Meet HashX Labs, 7–10 October",
       description: DESCRIPTION,
       isPartOf: { "@id": `${SITE_URL}/#website` },
-      about: { "@id": `${PAGE_URL}#token2049` },
+      about: { "@id": CONFERENCE_ID },
+      relatedLink: GUIDE_URL,
       primaryImageOfPage: `${SITE_URL}/img/marina-1920.webp`,
       breadcrumb: { "@id": `${PAGE_URL}#breadcrumb` },
+      datePublished: "2026-10-03",
+      dateModified: GUIDE_UPDATED,
       inLanguage: "en",
     },
     {
@@ -93,7 +71,7 @@ const STRUCTURED = {
         { "@type": "ListItem", position: 2, name: "TOKEN2049 Singapore 2026", item: PAGE_URL },
       ],
     },
-    conference,
+    CONFERENCE,
     {
       "@type": "BusinessEvent",
       "@id": `${PAGE_URL}#meetings`,
@@ -103,10 +81,10 @@ const STRUCTURED = {
       endDate: EVENT.leaves,
       eventStatus: "https://schema.org/EventScheduled",
       eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
-      location: [venue, { "@type": "VirtualLocation", url: `${PAGE_URL}#meet` }],
+      location: [VENUE, { "@type": "VirtualLocation", url: `${PAGE_URL}#meet` }],
       image: [`${SITE_URL}/img/marina-og.jpg`, `${SITE_URL}/img/marina-1920.webp`],
       organizer: { "@id": ORG_ID },
-      superEvent: { "@id": `${PAGE_URL}#token2049` },
+      superEvent: { "@id": CONFERENCE_ID },
       offers: {
         "@type": "Offer",
         price: 0,
@@ -116,11 +94,7 @@ const STRUCTURED = {
       },
       url: PAGE_URL,
     },
-    {
-      "@type": "FAQPage",
-      "@id": `${PAGE_URL}#faq`,
-      mainEntity: T49_FAQS.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
-    },
+    faqPage(`${PAGE_URL}#faq`, T49_FAQS),
   ],
 };
 
@@ -372,6 +346,14 @@ export default function Token2049Page() {
             <span className="eyebrow">Good to know</span>
             <h2 className="t-h2 mt-3">Before we meet</h2>
             <p className="t-lead mt-4">Anything else, just ask in your request.</p>
+            <Link href="/token2049/guide" className="t49-guide-link">
+              <span className="t49-mono">Attending TOKEN2049?</span>
+              <b>Read our TOKEN2049 Singapore 2026 guide</b>
+              <span>Dates, hours, getting there by MRT, side events and tips for builders.</span>
+              <span className="arr" aria-hidden="true">
+                →
+              </span>
+            </Link>
           </div>
           <div className="lg:col-span-8">
             <Accordion items={T49_FAQS} />

@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("/", 1, "weekly"),
     page("/token2049", 0.9, "daily", [`${SITE_URL}/img/marina-1920.webp`]),
+    page("/token2049/guide", 0.9, "daily", [`${SITE_URL}/img/marina-1280.webp`]),
     page("/services", 0.9),
     ...SERVICES.map((s) => page(`/services/${s.slug}`, 0.8)),
     page("/solutions", 0.8),

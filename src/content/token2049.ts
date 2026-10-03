@@ -182,3 +182,81 @@ export const T49_FAQS: [string, string][] = [
     "No. TOKEN2049 is an independent event. HashX Labs is attending, and this page is ours.",
   ],
 ];
+
+/* ── Guide (/token2049/guide) ─────────────────────────────────────────
+   An independent attendee guide. Every fact below was checked on
+   2026-10-04 against TOKEN2049's own FAQ (token2049.com/singapore/faqs),
+   the side-event directory (week.token2049.com) and, for the MRT, public
+   transport references. Opinions (the builder tips) are ours and say so.
+   Update GUIDE_UPDATED whenever a fact changes. */
+
+export const GUIDE_PUBLISHED = "2026-10-04";
+export const GUIDE_UPDATED = "2026-10-04";
+
+export const GUIDE_FACTS: [string, string][] = [
+  ["Dates", "Wednesday 7 and Thursday 8 October 2026"],
+  ["Hours", "07:30 to 18:00 (SGT) on both days"],
+  ["Venue", "Marina Bay Sands, all five floors"],
+  ["Address", "10 Bayfront Avenue, Singapore 018956"],
+  ["Nearest MRT", "Bayfront (CE1/DT16), Circle and Downtown lines. Exit E leads directly into the Sands Expo and Convention Centre."],
+  ["TOKEN2049 Week", "5 to 11 October 2026, with more than 1,000 side events across the city"],
+  ["Side-event directory", "week.token2049.com"],
+  ["Tickets", "Delivered by email. All purchases are non-refundable."],
+  ["Official app", "iOS and Android, with attendee matchmaking and floor plans"],
+];
+
+/** The week, day by day (5 October 2026 is a Monday). */
+export const GUIDE_WEEK: { when: string; what: string; d: string }[] = [
+  { when: "Mon 5 Oct", what: "TOKEN2049 Week begins", d: "Side events start across the city: conferences, workshops, investor gatherings, meetups and parties." },
+  { when: "Tue 6 – Thu 8 Oct", what: "TOKEN2049 Origins hackathon", d: "A 36-hour hackathon with a US$150,000 prize pool." },
+  {
+    when: "Wed 7 – Thu 8 Oct",
+    what: "The conference at Marina Bay Sands",
+    d: "Doors 07:30 to 18:00 on both days. The ten NEXUS startup-competition finalists pitch for a US$250,000 prize pool.",
+  },
+  { when: "Fri 9 Oct", what: "AFTER 2049", d: "The official closing party, on the Marina Bay Sands SkyPark, 57 floors up." },
+  { when: "Sun 11 Oct", what: "TOKEN2049 Week ends", d: "The last side events of the week." },
+];
+
+/** Our own advice for founders and engineers (opinion, not event facts). */
+export const GUIDE_TIPS: { t: string; d: string }[] = [
+  {
+    t: "Book meetings before you land",
+    d: "The two conference days fill up fast. Use the official app's matchmaking and the side-event directory to plan, and keep a few slots open for people you meet on the floor.",
+  },
+  {
+    t: "Bring a one-page spec",
+    d: "What the system does, which chains it runs on, and the few things that must never happen. It turns a 30-minute chat into a useful technical conversation.",
+  },
+  {
+    t: "For a security conversation, bring the repo",
+    d: "A link to the code, the list of privileged roles and external calls, and your launch or audit date. That is enough for an engineer to tell you where the risk is.",
+  },
+  {
+    t: "Ask auditors how findings arrive",
+    d: "As a PDF, or as failing tests you can run? What do they fuzz, and what is out of scope? The answers tell you more than a logo wall.",
+  },
+  {
+    t: "Use Friday and Saturday for deep dives",
+    d: "Once the conference floor closes, the city is quieter and there is time to open a laptop and go through architecture properly.",
+  },
+];
+
+export const GUIDE_FAQS: [string, string][] = [
+  ["When is TOKEN2049 Singapore 2026?", "TOKEN2049 Singapore 2026 is on Wednesday 7 and Thursday 8 October 2026. TOKEN2049 Week, the wider programme of side events, runs from 5 to 11 October."],
+  ["Where is TOKEN2049 Singapore 2026 held?", "At Marina Bay Sands, 10 Bayfront Avenue, Singapore 018956. The conference uses all five floors of the venue."],
+  ["What time does TOKEN2049 open?", "Doors are open from 07:30 to 18:00 Singapore time on both conference days, 7 and 8 October 2026."],
+  ["How do I get to TOKEN2049 by MRT?", "Take the Circle or Downtown line to Bayfront station (CE1/DT16). Exit E leads directly into the Sands Expo and Convention Centre at Marina Bay Sands."],
+  ["Where can I find TOKEN2049 side events?", "The official, searchable side-event directory is at week.token2049.com. More than 1,000 side events run across Singapore from 5 to 11 October 2026."],
+  ["When and where is AFTER 2049?", "AFTER 2049, the official closing party, is on Friday 9 October 2026 at the Marina Bay Sands SkyPark."],
+  ["When is the TOKEN2049 Origins hackathon?", "TOKEN2049 Origins runs from 6 to 8 October 2026. It is a 36-hour hackathon with a US$150,000 prize pool."],
+  ["Are TOKEN2049 tickets refundable?", "No. TOKEN2049 states that all ticket purchases are non-refundable. Tickets are delivered electronically by email."],
+  ["Do I need a visa for TOKEN2049 Singapore?", "Attendees arrange their own entry requirements for Singapore. TOKEN2049 does not refund tickets if a visa is refused, so check entry rules for your passport early."],
+  ["Can I meet HashX Labs at TOKEN2049?", "Yes. HashX Labs engineers are in Singapore from 7 to 10 October 2026, at Marina Bay Sands on the conference days and around the city afterwards. Book a slot on hashxlabs.com/token2049."],
+];
+
+export const GUIDE_SOURCES: { label: string; href: string }[] = [
+  { label: "TOKEN2049 Singapore FAQ (official)", href: "https://token2049.com/singapore/faqs" },
+  { label: "TOKEN2049 Week side-event directory (official)", href: "https://week.token2049.com/" },
+  { label: "Bayfront MRT station", href: "https://en.wikipedia.org/wiki/Bayfront_MRT_station" },
+];
