@@ -2250,13 +2250,6 @@ html.hx-intro:not(.hx-intro-land):not(.hx-intro-skip) .hx-brand { opacity: 0; }
     background: rgba(21,128,61,.16); box-shadow: inset 0 0 0 1px rgba(74,222,128,.3);
   }
   .t49-sent b { color: #fff; }
-  .t49-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .t49-send:disabled { opacity: .7; cursor: progress; }
-  .t49-stamp {
-    position: absolute; z-index: 3; right: 20px; bottom: 74px; padding: 6px 14px; border: 2.5px solid #15803d; border-radius: 8px;
-    font-size: 13px; font-weight: 600; letter-spacing: .2em; color: #15803d; background: rgba(255,255,255,.88);
-    transform: rotate(-9deg); animation: t49Stamp .55s cubic-bezier(.16, 1, .3, 1) both; pointer-events: none;
-  }
 
   /* The pass */
   .t49-pass-wrap { perspective: 1200px; }
@@ -2316,7 +2309,6 @@ html.hx-intro:not(.hx-intro-land):not(.hx-intro-skip) .hx-brand { opacity: 0; }
   }
 }
 @keyframes t49Roll { from { transform: translateY(-65%); opacity: 0; } }
-@keyframes t49Stamp { from { opacity: 0; scale: 1.8; } }
 @keyframes t49Settle { from { scale: 1.14; } to { scale: 1.04; } }
 @keyframes t49Par { to { translate: 0 3%; } }
 @keyframes t49Pop { from { opacity: 0; translate: 0 6px; } }
@@ -2327,7 +2319,7 @@ html.hx-intro:not(.hx-intro-land):not(.hx-intro-skip) .hx-brand { opacity: 0; }
   100% { transform: translateX(calc(100cqw - 12px)) rotate(180deg); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .t49-digit, .t49-pop, .t49-pass.is-flash, .t49-route-line i, .t49-hero-img, .t49-stamp { animation: none !important; }
+  .t49-digit, .t49-pop, .t49-pass.is-flash, .t49-route-line i, .t49-hero-img { animation: none !important; }
   .t49-hero-img { scale: 1.04; }
   .t49-pass { transform: none !important; transition: none; }
   .t49-week-fill { transition: none; }

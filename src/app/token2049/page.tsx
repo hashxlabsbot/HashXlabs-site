@@ -267,8 +267,8 @@ export default function Token2049Page() {
               <Words text="Get your meeting pass" />
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-white/70">
-              Fill it in and watch the pass come together. Send it and the pass lands in your inbox, while our team gets the request; an engineer
-              replies to confirm a time and place.
+              Fill it in and watch the pass come together. Sending it opens your email app with everything written out; an engineer replies to
+              confirm a time and place.
             </p>
           </Reveal>
           <MeetingPass />

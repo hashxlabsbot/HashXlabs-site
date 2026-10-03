@@ -8,14 +8,11 @@ import { bars, describe, initials, isConf } from "@/lib/token2049/pass";
 import { PICK_EVENT, type Pick } from "./pick";
 
 /* "Request a meeting": a form beside a pass that fills in as you type.
-   Sending posts to /api/token2049/meeting, which emails the visitor their pass
-   and notifies the team (lib/token2049/mail.ts). If that is not possible (mail
-   not configured, provider down, offline) it falls back to composing the same
-   request in the visitor's mail app, with copy-to-clipboard, so a request is
-   never lost. The pass ID and barcode are a hash of the request itself, not a
-   booking reference (lib/token2049/pass.ts). */
-
-type Status = "idle" | "sending" | "sent";
+   There is no backend, so sending prepares the request as an email to
+   COMPANY.email and redirects to the visitor's own mail app (mailto:), with
+   copy-to-clipboard as a fallback for visitors without a mail app, exactly
+   like the contact form. The pass ID and barcode are a hash of the request
+   itself, not a booking reference (lib/token2049/pass.ts). */
 
 export default function MeetingPass() {
   const [day, setDay] = useState<DayId>("07");
@@ -27,11 +24,7 @@ export default function MeetingPass() {
   const [email, setEmail] = useState("");
   const [note, setNote] = useState("");
   const [tried, setTried] = useState(false);
-  const [status, setStatus] = useState<Status>("idle");
-  const [passSent, setPassSent] = useState(true);
-  const [fallback, setFallback] = useState<string | null>(null); // the request as text, when the mail app was opened instead
-  const [limit, setLimit] = useState(false);
-  const [hp, setHp] = useState(""); // honeypot: real visitors never see it
+  const [message, setMessage] = useState<string | null>(null); // the prepared email text, once sent
   const [copied, setCopied] = useState(false);
   const [flash, setFlash] = useState(0);
   const ticket = useRef<HTMLDivElement>(null);
@@ -62,15 +55,16 @@ export default function MeetingPass() {
 
   // Editing after sending starts a fresh request.
   useEffect(() => {
-    setStatus((s) => (s === "sent" ? "idle" : s));
-    setFallback(null);
-    setLimit(false);
+    setMessage(null);
   }, [name, email, company, day, win, place, topics, note]);
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const nameOk = name.trim().length > 0;
 
-  const openMailApp = () => {
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    setTried(true);
+    if (!nameOk || !emailOk) return;
     const body = [
       `Name: ${name.trim()}`,
       `Email: ${email.trim()}`,
@@ -87,41 +81,10 @@ export default function MeetingPass() {
     ]
       .filter((l) => l !== null)
       .join("\n");
-    setFallback(body);
+    setMessage(body);
     setCopied(false);
     const subject = `TOKEN2049 meeting: ${name.trim()}${company.trim() ? ` (${company.trim()})` : ""}, ${dayInfo.dow} ${dayInfo.date}`;
     window.location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    setTried(true);
-    if (!nameOk || !emailOk || status === "sending") return;
-    setStatus("sending");
-    setFallback(null);
-    setLimit(false);
-    try {
-      const res = await fetch("/api/token2049/meeting", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), company: company.trim(), day, win, place, topics, note: note.trim(), website: hp }),
-      });
-      const data = await res.json().catch(() => null);
-      if (res.ok && data?.ok) {
-        setPassSent(data.passSent !== false);
-        setStatus("sent");
-        return;
-      }
-      if (res.status === 429) {
-        setLimit(true);
-        setStatus("idle");
-        return;
-      }
-    } catch {
-      // offline or the request failed: fall through to the mail app
-    }
-    setStatus("idle");
-    openMailApp();
   };
 
   // Gentle 3D tilt of the pass under a mouse.
@@ -265,55 +228,29 @@ export default function MeetingPass() {
           </div>
         </fieldset>
 
-        <div className="t49-hp" aria-hidden="true">
-          <label>
-            Leave this field empty
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} />
-          </label>
-        </div>
-
         {tried && (!nameOk || !emailOk) && (
           <p role="alert" className="t49-error">
             {!nameOk && !emailOk ? "Add your name and a valid email so we can reply." : !nameOk ? "Add your name so we know who to look for." : "That email doesn't look right."}
           </p>
         )}
-        {limit && (
-          <p role="alert" className="t49-error">
-            That is a few requests in a short time. Please wait a little, or email us at {COMPANY.email}.
-          </p>
-        )}
 
         <div className="flex flex-wrap items-center gap-4">
-          <button type="submit" disabled={status === "sending"} className="btn btn-primary t49-send">
-            {status === "sending" ? "Sending…" : "Send meeting request"} {status !== "sending" && <span className="arr" aria-hidden="true">→</span>}
+          <button type="submit" className="btn btn-primary t49-send">
+            Send meeting request <span className="arr" aria-hidden="true">→</span>
           </button>
           <p id="t49-form-note" className="t49-form-note">
-            We email you this pass and let the team know. An engineer replies to confirm a time and place.
+            Opens your email app with the request written out. We reply to confirm a time and place.
           </p>
         </div>
 
-        {status === "sent" && (
+        {message && (
           <div className="t49-sent" role="status">
-            <b>Request sent.</b>{" "}
-            {passSent ? (
-              <>Your pass is on its way to {email.trim()}. If it is not in your inbox in a few minutes, check spam. An engineer will reply to confirm a time and place.</>
-            ) : (
-              <>
-                We have your request, but your pass email could not be sent. You do not need to do anything: an engineer will reply to {email.trim()} to confirm a time and place.
-              </>
-            )}
-          </div>
-        )}
-
-        {fallback && (
-          <div className="t49-sent" role="status">
-            <b>Your email app should now be open.</b> We could not send this automatically, so the request is ready to send to {COMPANY.email} from your own mail app. If
-            nothing opened, copy it and email us directly.
+            <b>Your email app should now be open.</b> Your request is ready to send to {COMPANY.email}. If nothing opened, copy it and email us directly.
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
                 className="btn btn-ink btn-sm"
-                onClick={() => navigator.clipboard?.writeText(fallback).then(() => setCopied(true), () => setCopied(false))}
+                onClick={() => navigator.clipboard?.writeText(message).then(() => setCopied(true), () => setCopied(false))}
               >
                 {copied ? "Copied" : "Copy request"}
               </button>
@@ -327,13 +264,8 @@ export default function MeetingPass() {
 
       {/* ── Live pass ── */}
       <div className="t49-pass-wrap" onPointerMove={tilt} onPointerLeave={untilt}>
-        <div ref={ticket} key={flash} className={`t49-pass ${flash ? "is-flash" : ""} ${status === "sent" ? "is-sent" : ""}`} aria-label="Preview of your meeting request">
+        <div ref={ticket} key={flash} className={`t49-pass ${flash ? "is-flash" : ""}`} aria-label="Preview of your meeting request">
           <div className="t49-pass-sheen" aria-hidden="true" />
-          {status === "sent" && (
-            <div className="t49-stamp t49-mono" aria-hidden="true">
-              Request sent
-            </div>
-          )}
           <div className="t49-pass-main">
             <div className="t49-pass-top">
               <HashXLogo className="h-5 w-auto" />

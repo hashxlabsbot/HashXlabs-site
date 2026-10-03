@@ -1,8 +1,8 @@
 import { DAYS, PLACES, TOPICS, WINDOWS, type DayId, type PlaceId, type WindowId } from "@/content/token2049";
 
-/* Meeting-pass logic shared by the form (components/token2049/MeetingPass.tsx)
-   and the email (lib/token2049/mail.ts), so the pass in the live preview and
-   the pass in the inbox always show the same ID, barcode and wording. */
+/* Meeting-pass logic for the form (components/token2049/MeetingPass.tsx): the
+   pass ID, barcode and wording shown in the live preview and written into the
+   prepared email. */
 
 export type MeetingRequest = {
   name: string;
