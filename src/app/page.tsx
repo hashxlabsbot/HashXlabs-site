@@ -7,7 +7,7 @@ import WorkShowcase from "@/components/work/WorkShowcase";
 import ServicesRail from "@/components/home/ServicesRail";
 import Audiences from "@/components/home/Audiences";
 import Why from "@/components/home/Why";
-import StreamHero from "@/components/home/StreamHero";
+import ProofHero from "@/components/home/ProofHero";
 import TechBento from "@/components/home/TechBento";
 import Engagements from "@/components/home/Engagements";
 import Token2049Band from "@/components/home/Token2049Band";
@@ -26,8 +26,9 @@ export const metadata: Metadata = pageMeta({
 export default function Home() {
   return (
     <SiteShell>
-      {/* ── Hero: copy over an image corridor (components/home/StreamHero) ── */}
-      <StreamHero />
+      {/* ── Hero: clear offer + proof (components/home/ProofHero). The previous
+             image-corridor hero is components/home/StreamHero. ── */}
+      <ProofHero />
 
       {/* ── Chains ── */}
       <div className="relative z-10 border-y border-[var(--line)] bg-white">

@@ -18,15 +18,15 @@ const card = (name: string): StreamImage => ({
 });
 
 const STREAM = [
-  "chain-cubes",
-  "secure-cloud",
-  "glass-tower",
-  "eth-node",
-  "ai-robots",
-  "market-candles",
-  "block-lattice",
-  "ai-head",
-  "digital-dollar",
+  "dapp-amm-swap",
+  "dapp-security-audit",
+  "dapp-rwa-tokenization",
+  "dapp-ai-agents",
+  "dapp-mpc-custody",
+  "dapp-l2-rollup",
+  "dapp-stablecoin-treasury",
+  "dapp-crosschain-bridge",
+  "dapp-liquid-staking",
 ].map(card);
 
 export default function StreamHero() {
