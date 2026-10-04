@@ -2511,3 +2511,48 @@ html.hx-intro:not(.hx-intro-go):not(.hx-intro-skip) .t49-hero-img { animation-pl
 @keyframes phBlink { 50% { opacity: 0; } }
 html.hx-intro:not(.hx-intro-go):not(.hx-intro-skip) :is(.ph-eyebrow, .ph-title, .ph-sub, .ph-ctas, .ph-proof li, .ph-visual) { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .ph-eyebrow, .ph-title, .ph-sub, .ph-ctas, .ph-proof li, .ph-visual, .ph-line, .ph-caret { animation: none !important; } }
+
+/* ── PROCESS FACTORY (components/home/ProcessFactory) ─────────────────
+   Dark band. Wide screens: the 3D model fills the band (embed mode puts the
+   machine in the right 58 %) and the copy sits over the left. Phones and
+   tablets: copy first, the model below in its own box. */
+@layer components {
+  .pf { position: relative; isolation: isolate; overflow: hidden; overflow: clip; background: #050914; color: #fff; }
+  .pf-stage { position: relative; z-index: 0; height: 440px; }
+  .pf-stage::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(50% 60% at 50% 55%, rgba(0,87,217,.18), transparent 70%);
+  }
+  .pf-inner { position: relative; z-index: 1; padding-block: 72px 32px; }
+  @media (min-width: 1024px) {
+    .pf { min-height: 760px; display: flex; align-items: center; }
+    .pf-stage { position: absolute; inset: 0; height: auto; }
+    .pf-stage::before { background: radial-gradient(40% 60% at 70% 50%, rgba(0,87,217,.2), transparent 70%); }
+    .pf-stage::after {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(90deg, #050914 0%, rgba(5,9,20,.85) 28%, rgba(5,9,20,.35) 40%, transparent 50%);
+    }
+    .pf-inner { padding-block: 96px; pointer-events: none; }
+    .pf-copy { pointer-events: auto; max-width: 440px; }
+  }
+  @media (max-width: 1023px) { .pf { display: flex; flex-direction: column-reverse; } }
+  .pf-factory { width: 100%; }
+  .pf-eyebrow { color: #8cf4ff; }
+  .pf-title { margin-top: 12px; color: #fff; }
+  .pf-lead { margin-top: 14px; font-size: 16.5px; line-height: 1.6; color: rgba(255,255,255,.72); }
+  .pf-steps { margin-top: 26px; display: grid; gap: 6px; }
+  .pf-step {
+    display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 10px; width: 100%; padding: 12px 14px;
+    border-radius: 12px; text-align: left; cursor: pointer; color: #fff;
+    background: rgba(255,255,255,.035); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    transition: background-color .2s, box-shadow .2s;
+  }
+  .pf-step:hover { background: rgba(255,255,255,.07); }
+  .pf-step.is-on { background: rgba(0,87,217,.28); box-shadow: inset 0 0 0 1.5px #3d86ff; }
+  .pf-num { grid-row: span 2; font-family: var(--font-mono); font-size: 12px; color: #8cf4ff; padding-top: 2px; }
+  .pf-k { font-size: 15.5px; font-weight: 600; }
+  .pf-d { margin-top: 2px; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,.62); display: none; }
+  .pf-step.is-on .pf-d, .pf-step:focus-visible .pf-d { display: block; }
+  .pf-hint { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,.5); }
+  .pf-reset { margin-left: 6px; color: #8cf4ff; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+}

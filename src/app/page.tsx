@@ -1,19 +1,18 @@
-import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
-import Reveal from "@/components/Reveal";
 import WorkShowcase from "@/components/work/WorkShowcase";
 import ServicesRail from "@/components/home/ServicesRail";
 import Audiences from "@/components/home/Audiences";
 import Why from "@/components/home/Why";
 import ProofHero from "@/components/home/ProofHero";
+import ProcessFactory from "@/components/home/ProcessFactory";
 import TechBento from "@/components/home/TechBento";
 import Engagements from "@/components/home/Engagements";
 import Token2049Band from "@/components/home/Token2049Band";
 import Accordion from "@/components/ui/Accordion";
-import { ButtonLink, CTASection, Section, SectionHeader } from "@/components/ui";
-import { CHAINS, FAQS, PROCESS } from "@/content/company";
+import { ButtonLink, CTASection, Section } from "@/components/ui";
+import { CHAINS, FAQS } from "@/content/company";
 
 export const metadata: Metadata = pageMeta({
   title: "HashX Labs — Blockchain & AI engineering",
@@ -62,26 +61,8 @@ export default function Home() {
       {/* ── Why HashX: the lead sentence, demonstrated (components/home/Why) ── */}
       <Why />
 
-      {/* ── Process ──────────────────────────────────────────── */}
-      <Section soft id="process">
-        <SectionHeader eyebrow="How we work" title="A clear process from idea to mainnet" lead="Five steps, the same on every project. You see working software and written decisions at each one." center />
-        <Reveal className="proc">
-          <div className="proc-line hidden md:block" aria-hidden="true" />
-          <ol className="relative grid gap-5 md:grid-cols-5">
-            {PROCESS.map((p, i) => (
-              <li key={p.k} className="proc-item" style={{ "--i": i } as CSSProperties}>
-                <div className="h-full rounded-xl border border-[var(--line)] bg-white p-6">
-                  <span className="proc-num grid h-9 w-9 place-items-center rounded-full bg-[var(--signal)] text-sm font-semibold text-white" style={{ "--i": i } as CSSProperties}>
-                    {i + 1}
-                  </span>
-                  <h3 className="mt-5 text-[17px] font-semibold tracking-tight">{p.k}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-[var(--t-mid)]">{p.d}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-      </Section>
+      {/* ── How we work: the five steps + interactive 3D model (components/home/ProcessFactory) ── */}
+      <ProcessFactory />
 
       {/* ── Selected work: pinned scroll tour (components/work) ── */}
       <WorkShowcase />
