@@ -2368,6 +2368,15 @@ html.hx-intro:not(.hx-intro-go):not(.hx-intro-skip) .t49-hero-img { animation-pl
     mask-image: radial-gradient(ellipse 80% 75% at 60% 30%, #000 25%, transparent 75%);
     opacity: .7;
   }
+  /* Live 3D network (HeroField): fills the hero behind the copy and panel. */
+  .ph-field { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1.4s var(--ease); }
+  .ph-field[data-ready] { opacity: 1; }
+  .ph-field canvas { position: relative; display: block; width: 100%; height: 100%; }
+  .ph-field::before {
+    content: ""; position: absolute; left: calc(var(--gx, 70%) - var(--gr, 400px) * 1.3); top: calc(var(--gy, 50%) - var(--gr, 400px) * 1.3);
+    width: calc(var(--gr, 400px) * 2.6); height: calc(var(--gr, 400px) * 2.6); border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(10, 99, 240, .13), rgba(10, 99, 240, .05) 55%, transparent);
+  }
   .ph-grid { display: grid; gap: 48px; align-items: center; }
   @media (min-width: 1024px) { .ph-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 64px; } }
 

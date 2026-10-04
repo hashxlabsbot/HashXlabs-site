@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import Icon from "@/components/icons/Icon";
 import InvariantRun from "./InvariantRun";
+import HeroField from "./HeroField";
 import { CHAINS } from "@/content/company";
 
 /* Home hero (2026-10): a clear offer on the left, proof on the right.
@@ -9,6 +10,8 @@ import { CHAINS } from "@/content/company";
    repo), whose slogan, unreadable dashboard cards and single "Start a
    project" button gave visitors no reason to stay. The text never starts
    transparent, so the headline is the page's first paint (LCP).
+   Behind both, a live 3D network (HeroField) where transactions converge
+   into blocks; it loads after the page and never holds up the headline.
    Styles: "PROOF HERO" in globals.css. */
 
 const PROOF = ["Findings delivered as failing tests", "Your code, tests and docs, from day one", "Senior engineers from first call to mainnet"];
@@ -17,6 +20,7 @@ export default function ProofHero() {
   return (
     <section className="ph" aria-labelledby="ph-title">
       <div className="ph-bg" aria-hidden="true" />
+      <HeroField />
       <div className="container-x ph-grid">
         <div className="ph-copy">
           {/* During TOKEN2049 week the badge links to the event page; afterwards remove it. */}
