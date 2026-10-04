@@ -1766,160 +1766,92 @@ a.card:hover, .card-hover:hover {
 }
 
 /* =====================================================================
-   INTRO (components/intro/Intro.tsx) — "genesis block" load sequence.
+   INTRO (components/intro/Intro.tsx) — "ledger" load sequence.
    Unlayered on purpose: the hold rules below must beat the layered
    entrance animations. Only transform/opacity animate, so it all runs on
    the compositor and stays smooth while the page hydrates underneath.
-   Times are seconds from first paint; scene.ts holds the per-element
-   delays and EXIT_MS, when the inline script adds .hx-intro-out.
-   States on <html>: hx-intro (showing) → hx-intro-out (cracks open) →
-   hx-intro-go (page entrance released) → hx-intro-land (wordmark reached
-   the header) → removed.
+   States on <html>: hx-intro (showing) → hx-intro-out (clears, wordmark
+   flies to the header) → hx-intro-go (page entrance released) →
+   hx-intro-land (wordmark reached the header) → removed.
    hx-intro-skip: any click/key/scroll, quick fade.
    ===================================================================== */
 .hxi { display: none; }
 html.hx-intro .hxi {
-  --L: min(84vw, 640px, 115vh);  /* wordmark width; everything scales from it */
-  --r: calc(var(--L) * .0455);   /* block radius: the X of blocks is 11r = .5L tall */
-  --ink: #050914;
+  --L: min(72vw, 460px, 100vh);  /* wordmark width */
   --eo: cubic-bezier(.16, 1, .3, 1);
-  --eio: cubic-bezier(.7, 0, .2, 1);
   display: block; position: fixed; inset: 0; z-index: 100; overflow: hidden; contain: strict;
-  background: var(--ink); color: #fff; cursor: default; -webkit-user-select: none; user-select: none;
+  background-color: #f8fafd;
+  background-image:
+    linear-gradient(rgba(11, 18, 32, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 18, 32, .045) 1px, transparent 1px);
+  background-size: 56px 56px; background-position: center;
+  color: var(--t-hi); cursor: default; -webkit-user-select: none; user-select: none;
 }
-.hxi i, .hxi b { font-style: normal; }
-.hxi-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.hxi i { font-style: normal; }
+.hxi-fx { position: absolute; inset: 0; will-change: opacity; }
 
-/* Shards: four ink triangles meeting along the screen diagonals (the X). */
-.hxi-sh { position: absolute; background: var(--ink); will-change: transform; }
-.hxi-sh-t { left: 0; top: 0; width: 100%; height: 50%; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 100%; }
-.hxi-sh-b { left: 0; top: 50%; width: 100%; height: 50%; clip-path: polygon(50% 0, 100% 100%, 0 100%); transform-origin: 50% 0; }
-.hxi-sh-l { left: 0; top: 0; width: 50%; height: 100%; clip-path: polygon(0 0, 100% 50%, 0 100%); transform-origin: 100% 50%; }
-.hxi-sh-r { left: 50%; top: 0; width: 50%; height: 100%; clip-path: polygon(100% 0, 100% 100%, 0 50%); transform-origin: 0 50%; }
+/* Ledger columns drift upward; rows are 30px so the columns stay on a grid. */
+.hxi-cols { position: absolute; inset: 0; }
+.hxi-col {
+  position: absolute; top: 0; width: 31%; animation: hxi-drift 3.6s linear both; will-change: transform;
+  font: 500 11px/30px var(--font-mono-brand), ui-monospace, SFMono-Regular, Menlo, monospace; color: #6b7686;
+}
+.hxi-col:nth-child(1) { left: 2%; }
+.hxi-col:nth-child(2) { left: 34.5%; }
+.hxi-col:nth-child(3) { left: 67%; }
+.hxi-tx { display: flex; align-items: center; gap: 7px; height: 30px; margin: 0; white-space: nowrap; }
+.hxi-a { color: #4a5568; }
+.hxi-arr { color: #a3adbb; }
+.hxi-amt { margin-left: auto; color: #8a94a3; }
+/* Status: a grey pending ring that turns into a blue check when it confirms. */
+.hxi-ok { position: relative; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #c5cdd9; }
+.hxi-ok::after {
+  content: ""; position: absolute; inset: -1.5px; border-radius: 50%; background: var(--signal);
+  opacity: 0; animation: hxi-confirm .3s ease var(--d) forwards; will-change: opacity;
+}
+.hxi-ok::before {
+  content: ""; position: absolute; z-index: 1; left: 3.6px; top: 2.6px; width: 3px; height: 6px;
+  border: solid #fff; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg); opacity: 0;
+  animation: hxi-confirm .3s ease var(--d) forwards; will-change: opacity;
+}
 
-/* Layer pinning: when a small animated element finishes, Chrome folds it back
-   into its parent's layer and re-rasters that parent. Here the parents are
-   the full-viewport overlay and the 100vmax network, so each node or link
-   finishing cost a big re-raster. Elements that wait at opacity 0 (rings,
-   flashes, packets) are promoted up front too: promoted only as each one
-   started, the new layer stalled that frame (~47fps while blocks landed).
-   will-change keeps all of them on their own small layers for the intro. */
-.hxi-fx, .hxi-glow, .hxi-cube > .hxi-flash { will-change: opacity; }
-.hxi-n, .hxi-l, .hxi-hash, .hxi-cube, .hxi-p { will-change: transform; }
-.hxi-cube > .hxi-ring, .hxi-wave { will-change: transform, opacity; }
-.hxi-fx { position: absolute; inset: 0; }
-.hxi-glow {
+/* Clears the middle for the wordmark and fades the ledger out at the edges. */
+.hxi-veil {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 75% 70% at 50% 50%, transparent 45%, rgba(2, 4, 10, .75)),
-    radial-gradient(ellipse 34% 30% at 50% 50%, rgba(0, 102, 255, .24), transparent 72%),
-    radial-gradient(ellipse 80% 70% at 50% 55%, rgba(0, 60, 170, .17), transparent 75%),
-    radial-gradient(rgba(140, 180, 255, .11) 1px, transparent 1.5px) 0 0 / 26px 26px;
-  animation: hxi-in 1s ease .05s both;
+    radial-gradient(ellipse 46% 30% at 50% 50%, #f8fafd 38%, rgba(248, 250, 253, 0) 100%),
+    linear-gradient(#f8fafd, rgba(248, 250, 253, 0) 22%, rgba(248, 250, 253, 0) 78%, #f8fafd);
 }
 
-/* Network: a 100vmax square, so link angles hold at any aspect ratio. */
-.hxi-net {
-  position: absolute; left: 50%; top: 50%; width: 100vmax; height: 100vmax; margin: -50vmax 0 0 -50vmax;
-  animation: hxi-zoom 3.2s cubic-bezier(.2, .6, .3, 1) both, hxi-to .6s ease 1.45s forwards;
-  --to: .4;
-}
-.hxi-n {
-  position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #a9d6ff;
-  box-shadow: 0 0 0 3px rgba(0, 119, 255, .16), 0 0 12px 1px rgba(0, 150, 255, .6);
-  animation: hxi-pop .55s var(--eo) var(--d) both;
-}
-.hxi-n.is-big { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; background: #e4f4ff; box-shadow: 0 0 0 4px rgba(0, 119, 255, .2), 0 0 18px 2px rgba(0, 150, 255, .7); }
-.hxi-l {
-  position: absolute; height: 1px; margin-top: -.5px; transform-origin: 0 50%;
-  background: linear-gradient(90deg, rgba(110, 175, 255, .05), rgba(110, 175, 255, .5) 55%, rgba(110, 175, 255, .14));
-  animation: hxi-draw .7s var(--eo) var(--d) both;
-}
-.hxi-p { position: absolute; inset: 0; opacity: 0; animation: hxi-run var(--t) cubic-bezier(.45, 0, .55, 1) var(--d) infinite; }
-.hxi-p::before {
-  content: ""; position: absolute; left: -16px; top: -.5px; width: 16px; height: 2px; border-radius: 2px;
-  background: linear-gradient(90deg, transparent, #e2f3ff); box-shadow: 0 0 8px rgba(0, 170, 255, .9);
-}
-.hxi-hash {
-  position: absolute; margin: 9px 0 0 11px; white-space: nowrap;
-  font: 500 10px/1 var(--font-mono-brand), ui-monospace, monospace; letter-spacing: .04em; color: rgba(140, 190, 255, .42);
-  animation: hxi-in .6s ease var(--d) both;
-}
-
-/* The X of blocks. Each block drops in from beyond its own side, rings on
-   landing, flashes as the validation pulse passes, then the whole X shrinks
-   onto the wordmark's X glyph (cap height ≈ .2 of the block X). */
-.hxi-x { position: absolute; left: 50%; top: 50%; width: 0; height: 0; animation: hxi-xshrink .54s var(--eio) 1.52s forwards, hxi-to .14s linear 1.9s forwards; --to: 0; }
-.hxi-cube {
-  position: absolute; left: calc(var(--x) * var(--r)); top: calc(var(--y) * var(--r));
-  width: calc(var(--r) * 1.74); height: calc(var(--r) * 2); margin: calc(var(--r) * -1) 0 0 calc(var(--r) * -.87);
-  animation: hxi-drop .62s var(--eo) var(--d) both;
-}
-.hxi-cube > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.hxi-cube > .hxi-ring { fill: none; stroke: #59b4ff; stroke-width: .05; opacity: 0; animation: hxi-ring .7s var(--eo) calc(var(--d) + .46s) forwards; }
-.hxi-cube > .hxi-flash { fill: #e9f6ff; opacity: 0; animation: hxi-flash .42s ease-out calc(var(--pulse) + var(--i) * .026s) forwards; }
-
-/* The moment the X locks: a flash and a hexagonal shockwave. */
-.hxi-burst {
-  position: absolute; left: 50%; top: 50%; width: calc(var(--L) * .7); height: calc(var(--L) * .7); margin: calc(var(--L) * -.35) 0 0 calc(var(--L) * -.35);
-  border-radius: 50%; background: radial-gradient(closest-side, rgba(205, 238, 255, .85), rgba(0, 140, 255, .32) 45%, transparent);
-  opacity: 0; animation: hxi-burst .9s var(--eo) 1.9s forwards;
-}
-.hxi-wave {
-  position: absolute; left: 50%; top: 50%; width: calc(var(--L) * .26); height: calc(var(--L) * .3); margin: calc(var(--L) * -.15) 0 0 calc(var(--L) * -.13);
-  overflow: visible; fill: none; stroke: #6fc0ff; stroke-width: .012; opacity: 0; animation: hxi-wave 1.1s cubic-bezier(.2, .7, .2, 1) 1.94s forwards;
-}
-.hxi-xglow {
-  position: absolute; left: 50%; top: 50%; width: calc(var(--L) * .34); height: calc(var(--L) * .34); margin: calc(var(--L) * -.17) 0 0 calc(var(--L) * -.17);
-  border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 140, 255, .45), transparent); opacity: 0; animation: hxi-to .6s ease 1.95s forwards; --to: 1;
-}
-
-.hxi-tag {
-  position: absolute; left: 0; right: 0; top: calc(50% + var(--L) * .16); display: grid; justify-items: center; gap: 14px;
-  font: 500 11px/1 var(--font-mono-brand), ui-monospace, monospace; letter-spacing: .32em; text-transform: uppercase; color: rgba(186, 214, 255, .72);
-}
-.hxi-tag > span { padding-left: .32em; animation: hxi-rise .7s var(--eo) 2.08s both; }
-.hxi-tag > i { width: 132px; height: 1px; background: linear-gradient(90deg, transparent, #4aa8ff, transparent); animation: hxi-draw .6s var(--eio) 2s both; transform-origin: 50% 50%; }
-
-/* Wordmark on HashXLogo's 200×40 grid (font 28, X at x=78, LABS at x=97),
-   placed so the X glyph's centre sits on the screen centre. */
+/* Wordmark on HashXLogo's 200×40 grid (font 28, X at x=78, LABS at x=97). */
 .hxi-lk {
-  position: absolute; left: calc(50% - var(--L) * .4334); top: calc(50% - var(--L) * .101);
+  position: absolute; left: calc(50% - var(--L) / 2); top: calc(50% - var(--L) * .1);
   width: var(--L); height: calc(var(--L) * .2);
   font: 800 calc(var(--L) * .14) / 1.15 Inter, system-ui, sans-serif; letter-spacing: -.0357em; white-space: nowrap;
 }
-.hxi-lk-in { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.hxi-lk-in { position: absolute; inset: 0; transform-origin: 50% 50%; animation: hxi-rise .7s var(--eo) .15s both; }
 .hxi-g { position: absolute; top: calc(var(--L) * .02); }
 .hxi-g-hash { left: 0; }
 .hxi-g-labs { left: 48.5%; }
-.hxi-g-x {
-  left: 39%; background: linear-gradient(135deg, #0077ff, #00aaff); -webkit-background-clip: text; background-clip: text; color: transparent;
-  animation: hxi-xin .5s var(--eo) 1.86s both;
+.hxi-g-x { left: 39%; background: linear-gradient(135deg, #0077ff, #00aaff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Progress line + caption under the wordmark. */
+.hxi-prog {
+  position: absolute; left: 50%; top: calc(50% + var(--L) * .16); width: min(var(--L), 280px); translate: -50% 0;
+  display: grid; gap: 10px; justify-items: center; animation: hxi-in .5s ease .5s both;
 }
-/* Reels: the sizer keeps each slot exactly its final letter's width; the
-   strip rolls through hex digits and locks on the letter. */
-.hxi-rl { position: relative; display: inline-block; vertical-align: top; height: 1.15em; overflow: hidden; animation: hxi-in .12s linear var(--d) both; }
-.hxi-rl-sz { display: block; visibility: hidden; }
-.hxi-rl-strip { position: absolute; left: 0; top: 0; width: 100%; animation: hxi-reel .5s steps(9, end) var(--d) both; }
-@supports (animation-timing-function: linear(0, 1)) {
-  .hxi-rl-strip { animation-timing-function: var(--reel-ease); }
+.hxi-prog i { display: block; width: 100%; height: 2px; border-radius: 2px; background: rgba(11, 18, 32, .09); position: relative; overflow: hidden; }
+.hxi-prog i::after {
+  content: ""; position: absolute; inset: 0; background: var(--signal); transform-origin: 0 50%;
+  animation: hxi-bar 2.1s cubic-bezier(.45, .05, .25, 1) .3s both;
 }
-.hxi-rl-strip > span { display: block; height: 1.15em; }
-.hxi-rl-strip > .hxi-rl-hex {
-  font-family: var(--font-mono-brand), ui-monospace, monospace; font-weight: 500; font-size: .66em; letter-spacing: 0;
-  height: calc(1.15em / .66); line-height: calc(1.15em / .66); text-align: center; color: #6bb8ff; text-shadow: 0 0 12px rgba(0, 140, 255, .8);
-}
+.hxi-prog span { font: 500 11px/1 var(--font-mono-brand), ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: #6b7686; }
 
 /* ── Exit ── */
-html.hx-intro-out .hxi { background: transparent; pointer-events: none; }
-html.hx-intro-out .hxi-fx { opacity: 0; transition: opacity .28s ease; }
-html.hx-intro-out .hxi-sh-t { animation: hxi-sh-t .95s forwards; }
-html.hx-intro-out .hxi-sh-r { animation: hxi-sh-r .95s forwards; }
-html.hx-intro-out .hxi-sh-b { animation: hxi-sh-b .95s forwards; }
-html.hx-intro-out .hxi-sh-l { animation: hxi-sh-l .95s forwards; }
-/* Letters turn ink as the white page opens up behind them. */
-html.hx-intro-out .hxi-lk { color: var(--t-hi); transition: color .35s ease .3s, opacity .25s ease; }
-html.hx-intro-out .hxi-lk-in { animation: hxi-lift .5s ease forwards; }
+html.hx-intro-out .hxi { background: transparent; transition: background-color .45s ease .1s; pointer-events: none; }
+html.hx-intro-out .hxi { background-image: none; }
+html.hx-intro-out .hxi-fx { opacity: 0; transition: opacity .35s ease; }
+html.hx-intro-out .hxi-lk-in { animation: none; }
 html.hx-intro-out .hxi-lk-in[data-flip] { animation: hxi-flip .92s cubic-bezier(.65, 0, .2, 1) .06s forwards; }
 html.hx-intro-land .hxi-lk { opacity: 0; }
 html.hx-intro-skip .hxi { opacity: 0; transition: opacity .4s ease; pointer-events: none; }
@@ -1933,47 +1865,21 @@ html.hx-intro .hx-brand { transition: opacity .3s ease; }
 html.hx-intro:not(.hx-intro-land):not(.hx-intro-skip) .hx-brand { opacity: 0; }
 
 @keyframes hxi-in { from { opacity: 0; } }
-@keyframes hxi-to { to { opacity: var(--to); } }
-@keyframes hxi-pop { from { opacity: 0; scale: 0; } 60% { opacity: 1; } }
-@keyframes hxi-draw { from { scale: 0 1; } }
-@keyframes hxi-rise { from { opacity: 0; translate: 0 10px; } }
-@keyframes hxi-zoom { from { scale: 1.14; } }
-@keyframes hxi-run { 0% { translate: 0 0; opacity: 0; } 15%, 80% { opacity: 1; } 100% { translate: 100% 0; opacity: 0; } }
-@keyframes hxi-drop { from { opacity: 0; translate: var(--fx) var(--fy); scale: 2.4; rotate: var(--fr); } 30% { opacity: 1; } }
-/* Rings and the wave are <svg> elements: Chrome only composites `transform`
-   on SVG roots, not the individual scale property. */
-@keyframes hxi-ring { from { opacity: .9; transform: scale(.9); } to { opacity: 0; transform: scale(2.3); } }
-@keyframes hxi-flash { 25% { opacity: .85; } to { opacity: 0; } }
-@keyframes hxi-xshrink { to { scale: .2; } }
-@keyframes hxi-burst { 0% { opacity: 0; scale: .2; } 18% { opacity: .9; } 100% { opacity: 0; scale: 1.5; } }
-@keyframes hxi-wave { 0% { opacity: 0; transform: scale(.3); } 10% { opacity: .75; } 100% { opacity: 0; transform: scale(7); } }
-@keyframes hxi-xin { from { opacity: 0; scale: 1.7; } }
-@keyframes hxi-reel { from { translate: 0 0; } to { translate: 0 -90%; } }
-@keyframes hxi-lift { to { opacity: 0; scale: .92; } }
+@keyframes hxi-rise { from { opacity: 0; translate: 0 12px; } }
+@keyframes hxi-drift { to { translate: 0 calc(var(--s) * -1); } }
+@keyframes hxi-confirm { to { opacity: 1; } }
+@keyframes hxi-bar { from { transform: scaleX(0); } }
 @keyframes hxi-flip { to { translate: var(--fx) var(--fy); scale: var(--fs); } }
-/* Shards: a hairline crack first (the page shows through as a white X),
-   then they accelerate off-screen, turning together like a pinwheel. */
-@keyframes hxi-sh-t {
-  0% { translate: 0 0; rotate: 0deg; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16% { translate: 0 -1.4vmin; rotate: -.3deg; animation-timing-function: cubic-bezier(.65, 0, .25, 1); }
-  100% { translate: 0 -64vh; rotate: -5deg; }
-}
-@keyframes hxi-sh-r {
-  0% { translate: 0 0; rotate: 0deg; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16% { translate: 1.4vmin 0; rotate: -.3deg; animation-timing-function: cubic-bezier(.65, 0, .25, 1); }
-  100% { translate: 64vw 0; rotate: -5deg; }
-}
-@keyframes hxi-sh-b {
-  0% { translate: 0 0; rotate: 0deg; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16% { translate: 0 1.4vmin; rotate: -.3deg; animation-timing-function: cubic-bezier(.65, 0, .25, 1); }
-  100% { translate: 0 64vh; rotate: -5deg; }
-}
-@keyframes hxi-sh-l {
-  0% { translate: 0 0; rotate: 0deg; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  16% { translate: -1.4vmin 0; rotate: -.3deg; animation-timing-function: cubic-bezier(.65, 0, .25, 1); }
-  100% { translate: -64vw 0; rotate: -5deg; }
-}
 
+@media (max-width: 700px) {
+  .hxi-col { width: 47%; font-size: 10px; }
+  .hxi-col:nth-child(1) { left: 2%; }
+  .hxi-col:nth-child(2) { left: 51%; }
+  .hxi-col:nth-child(3) { display: none; }
+  .hxi-amt { display: none; }
+  .hxi-ok { margin-left: auto; }
+  .hxi-veil { background: radial-gradient(ellipse 80% 24% at 50% 50%, #f8fafd 45%, rgba(248, 250, 253, 0) 100%), linear-gradient(#f8fafd, rgba(248, 250, 253, 0) 22%, rgba(248, 250, 253, 0) 78%, #f8fafd); }
+}
 @media (prefers-reduced-motion: reduce) { .hxi { display: none !important; } }
 @media print { .hxi { display: none !important; } }
 

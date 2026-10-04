@@ -1,11 +1,10 @@
 import type { CSSProperties } from "react";
-import { CUBES, EXIT_MS, HASHES, HASH_REELS, LABS_REELS, LINKS, NODES, PACKETS, PULSE_START, REEL_EASE, type Reel } from "./scene";
+import { COLUMNS, EXIT_MS } from "./scene";
 
-/* Load intro, "genesis block". A network boots outward from the centre, 13
-   isometric blocks fly in out of it and lock into the logo's X, a validation
-   pulse runs down the chain, the X shrinks into the wordmark while HASH and
-   LABS decode from hex, then the screen cracks along the X and the wordmark
-   flies into the header logo's place.
+/* Load intro, "ledger". A light screen where transactions stream past in the
+   background (address to address, amount, each one confirming in turn) while
+   the wordmark settles in the middle under a progress line. When it is done
+   the screen clears and the wordmark flies into the header logo's place.
 
    Every movement is a CSS transform/opacity animation (globals.css → INTRO),
    so it runs on the compositor from first paint and stays smooth while React
@@ -92,131 +91,32 @@ function introScript(exitMs: number) {
   later(exit, exitMs);
 }
 
-function ReelText({ reels }: { reels: Reel[] }) {
-  return reels.map((r, i) => (
-    <span key={i} className="hxi-rl" style={{ "--d": `${r.d}s` } as Vars}>
-      <span className="hxi-rl-sz">{r.ch}</span>
-      <span className="hxi-rl-strip">
-        {r.strip.map((c, j) => (
-          <span key={j} className="hxi-rl-hex">
-            {c}
-          </span>
-        ))}
-        <span>{r.ch}</span>
-      </span>
-    </span>
-  ));
-}
-
 export default function Intro() {
   return (
     <>
-      <div id="hxi" className="hxi" aria-hidden="true" style={{ "--reel-ease": REEL_EASE } as Vars}>
-        <svg className="hxi-defs" width="0" height="0" focusable="false">
-          <defs>
-            <linearGradient id="hxi-top" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#e2f4ff" />
-              <stop offset="1" stopColor="#68bcff" />
-            </linearGradient>
-            <linearGradient id="hxi-left" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#2d9bff" />
-              <stop offset="1" stopColor="#0a5ee4" />
-            </linearGradient>
-            <linearGradient id="hxi-right" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#0a4fc8" />
-              <stop offset="1" stopColor="#062a78" />
-            </linearGradient>
-            <symbol id="hxi-cube" viewBox="-0.87 -1 1.74 2">
-              <polygon points="0,0 -0.814,-0.47 0,-0.94 0.814,-0.47" fill="url(#hxi-top)" />
-              <polygon points="0,0 -0.814,-0.47 -0.814,0.47 0,0.94" fill="url(#hxi-left)" />
-              <polygon points="0,0 0.814,-0.47 0.814,0.47 0,0.94" fill="url(#hxi-right)" />
-              <path
-                d="M0 -0.94 L0.814 -0.47 L0.814 0.47 L0 0.94 L-0.814 0.47 L-0.814 -0.47 Z M0 0 L0 0.94 M0 0 L-0.814 -0.47 M0 0 L0.814 -0.47"
-                fill="none"
-                stroke="#bfe6ff"
-                strokeOpacity=".7"
-                strokeWidth=".035"
-                strokeLinejoin="round"
-              />
-            </symbol>
-            <symbol id="hxi-hex" viewBox="-0.87 -1 1.74 2">
-              <polygon points="0,-0.94 0.814,-0.47 0.814,0.47 0,0.94 -0.814,0.47 -0.814,-0.47" />
-            </symbol>
-          </defs>
-        </svg>
-
-        {/* Four shards meeting along the X's diagonals; they part on exit. */}
-        <i className="hxi-sh hxi-sh-t" />
-        <i className="hxi-sh hxi-sh-r" />
-        <i className="hxi-sh hxi-sh-b" />
-        <i className="hxi-sh hxi-sh-l" />
-
-        {/* Everything decorative fades as one layer on exit. */}
+      <div id="hxi" className="hxi" aria-hidden="true">
         <div className="hxi-fx">
-          <i className="hxi-glow" />
-
-          <div className="hxi-net">
-            {LINKS.map((l, i) => (
-              <i
-                key={`l${i}`}
-                className="hxi-l"
-                style={{ left: `${l.x}%`, top: `${l.y}%`, width: `${l.len}%`, rotate: `${l.deg}deg`, "--d": `${l.d}s` } as Vars}
-              >
-                {PACKETS.filter((p) => p.link === i).map((p) => (
-                  <b key={p.link} className="hxi-p" style={{ "--d": `${p.d}s`, "--t": `${p.t}s` } as Vars} />
+          <div className="hxi-cols">
+            {COLUMNS.map((c, i) => (
+              <div key={i} className="hxi-col" style={{ "--s": `${c.shift}px` } as Vars}>
+                {c.rows.map((r, j) => (
+                  <p key={j} className="hxi-tx">
+                    <span className="hxi-a">{r.from}</span>
+                    <span className="hxi-arr">→</span>
+                    <span className="hxi-a">{r.to}</span>
+                    <span className="hxi-amt">
+                      {r.amt} {r.unit}
+                    </span>
+                    <i className="hxi-ok" style={{ "--d": `${r.d}s` } as Vars} />
+                  </p>
                 ))}
-              </i>
-            ))}
-            {NODES.map((n, i) => (
-              <i key={`n${i}`} className={`hxi-n${n.big ? " is-big" : ""}`} style={{ left: `${n.x}%`, top: `${n.y}%`, "--d": `${n.d}s` } as Vars} />
-            ))}
-            {HASHES.map((t, i) => (
-              <span key={`h${i}`} className="hxi-hash" style={{ left: `${t.x}%`, top: `${t.y}%`, "--d": `${t.d}s` } as Vars}>
-                {t.text}
-              </span>
-            ))}
-          </div>
-
-          <div className="hxi-x" style={{ "--pulse": `${PULSE_START}s` } as Vars}>
-            {CUBES.map((c, i) => (
-              <div
-                key={i}
-                className="hxi-cube"
-                style={
-                  {
-                    "--x": c.x,
-                    "--y": c.y,
-                    "--d": `${c.d}s`,
-                    "--fx": `${c.fx}vmin`,
-                    "--fy": `${c.fy}vmin`,
-                    "--fr": `${c.fr}deg`,
-                    "--i": i,
-                    zIndex: c.z,
-                  } as Vars
-                }
-              >
-                <svg className="hxi-ring" focusable="false">
-                  <use href="#hxi-hex" />
-                </svg>
-                <svg focusable="false">
-                  <use href="#hxi-cube" />
-                </svg>
-                <svg className="hxi-flash" focusable="false">
-                  <use href="#hxi-hex" />
-                </svg>
               </div>
             ))}
           </div>
-
-          <i className="hxi-burst" />
-          <svg className="hxi-wave" focusable="false">
-            <use href="#hxi-hex" />
-          </svg>
-          <i className="hxi-xglow" />
-
-          <div className="hxi-tag">
-            <span>Blockchain &amp; AI engineering</span>
+          <i className="hxi-veil" />
+          <div className="hxi-prog">
             <i />
+            <span>Processing transactions</span>
           </div>
         </div>
 
@@ -224,13 +124,9 @@ export default function Intro() {
             fly straight into the header logo's place. */}
         <div className="hxi-lk">
           <div className="hxi-lk-in" suppressHydrationWarning>
-            <span className="hxi-g hxi-g-hash">
-              <ReelText reels={HASH_REELS} />
-            </span>
+            <span className="hxi-g hxi-g-hash">HASH</span>
             <span className="hxi-g hxi-g-x">X</span>
-            <span className="hxi-g hxi-g-labs">
-              <ReelText reels={LABS_REELS} />
-            </span>
+            <span className="hxi-g hxi-g-labs">LABS</span>
           </div>
         </div>
       </div>
