@@ -127,12 +127,82 @@ export const REASONS: { icon: IconName; title: string; d: string }[] = [
   { icon: "document", title: "You own everything", d: "Code, tests, documentation and runbooks live in your repository from day one." },
 ];
 
-export const PROCESS: { k: string; d: string }[] = [
-  { k: "Discover", d: "We learn the product, the users and what must never go wrong, then write it down as a specification." },
-  { k: "Design", d: "Architecture, threat model and a scoped plan with milestones, reviewed with you before code." },
-  { k: "Build", d: "Small, readable components with tests in every pull request and a demo at each milestone." },
-  { k: "Test & review", d: "Invariant fuzzing, static analysis, fork tests and manual review. Findings arrive as tests you can run." },
-  { k: "Launch & support", d: "Deployment scripts, key ceremonies, monitoring and a runbook. We stay on after launch." },
+/* `get` = what the client receives at that step (home "How we work" chain). */
+export const PROCESS: { k: string; d: string; get: string[] }[] = [
+  { k: "Discover", d: "We learn the product, the users and what must never go wrong, then write it down as a specification.", get: ["Written specification", "Invariants: what must never happen", "Open questions answered"] },
+  { k: "Design", d: "Architecture, threat model and a scoped plan with milestones, reviewed with you before code.", get: ["Architecture diagram", "Threat model with mitigations", "Milestone plan you approve"] },
+  { k: "Build", d: "Small, readable components with tests in every pull request and a demo at each milestone.", get: ["Pull requests with tests", "A demo at every milestone", "Code your team can read"] },
+  { k: "Test & review", d: "Invariant fuzzing, static analysis, fork tests and manual review. Findings arrive as tests you can run.", get: ["Fuzzing and static analysis", "Findings as runnable tests", "Fixes with regression tests"] },
+  { k: "Launch & support", d: "Deployment scripts, key ceremonies, monitoring and a runbook. We stay on after launch.", get: ["Deploy scripts and key ceremony", "Monitoring and alerts", "A runbook and support after launch"] },
+];
+
+/* Client sites we built that are live in production (home "Live projects").
+   Screenshots are real captures of the live sites: `npm run sites` refreshes
+   them into public/img/sites/ (ids must match scripts/capture-sites.mjs).
+   `desk`/`phone` are the captured image sizes, used to size the scroll pan. */
+export type LiveProject = {
+  id: string;
+  name: string;
+  url: string;
+  domain: string;
+  kind: string;
+  title: string;
+  d: string;
+  built: string[];
+  facts: { k: string; v: string; href?: string }[];
+  stack: string[];
+  accent: string;
+  desk: [number, number];
+  phone: [number, number];
+};
+
+export const LIVE_PROJECTS: LiveProject[] = [
+  {
+    id: "singhcoin",
+    name: "SinghCoin",
+    url: "https://singhcoin.io/",
+    domain: "singhcoin.io",
+    kind: "Web3 · Creator economy",
+    title: "A home for a creator token and its ecosystem",
+    d: "SinghCoin connects social content, digital collectibles, events and token rewards. The site explains the ecosystem, introduces its new app, SlaySpace, and puts the SINGH token's on-chain details one click from BscScan.",
+    built: [
+      "Kinetic hero and motion system, hand-coded without a framework",
+      "Ecosystem pages for social, collectibles and events",
+      "Token section with the BEP-20 contract and a BscScan link",
+    ],
+    facts: [
+      { k: "Token", v: "SINGH" },
+      { k: "Standard", v: "BEP-20" },
+      { k: "Network", v: "BNB Smart Chain", href: "https://bscscan.com/token/0x867B96B33B2c13CC8cB78A9aA95420c6cD42C4c6" },
+    ],
+    stack: ["HTML & CSS", "Vanilla JS", "Cloudflare", "BNB Chain"],
+    accent: "#e9b300",
+    desk: [1200, 4333],
+    phone: [390, 7000],
+  },
+  {
+    id: "bitnautics",
+    name: "BitNautics",
+    url: "https://bitnautics.com/",
+    domain: "bitnautics.com",
+    kind: "Software consultancy · Germany",
+    title: "A corporate site for a German software consultancy",
+    d: "BitNautics builds custom software, websites and automotive embedded systems from Rosbach, Germany. Their site presents three service lines, the team and open roles, and turns visitors into quote requests.",
+    built: [
+      "Responsive company website, designed and built end to end",
+      "Service pages for web, automotive and custom software",
+      "Careers, blog and quote-request flows",
+    ],
+    facts: [
+      { k: "Based in", v: "Rosbach, Germany" },
+      { k: "Services", v: "Web · Automotive · Software" },
+      { k: "Platform", v: "WordPress + Elementor" },
+    ],
+    stack: ["WordPress", "Elementor", "Responsive", "SEO"],
+    accent: "#1fbf5b",
+    desk: [1200, 4333],
+    phone: [390, 7000],
+  },
 ];
 
 export const ENGAGEMENTS: { title: string; d: string; best: string; points: string[] }[] = [

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import Icon from "@/components/icons/Icon";
 import Reveal from "@/components/Reveal";
 import Words from "@/components/fx/Words";
 import BlockGrid from "@/components/fx/BlockGrid";
@@ -93,12 +92,16 @@ export function ButtonLink({
   );
 }
 
-export function CheckList({ items, className = "" }: { items: string[]; className?: string }) {
+/* Editorial list: hairline rows with a mono index. No check marks anywhere
+   on the site (user decision 2026-10-05: they read as cheap). */
+export function IndexList({ items, className = "" }: { items: string[]; className?: string }) {
   return (
-    <ul className={`grid gap-2.5 ${className}`}>
-      {items.map((t) => (
-        <li key={t} className="flex gap-3 text-[15px] leading-snug text-[var(--t-hi)]">
-          <Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--signal)]" strokeWidth={2.2} />
+    <ul className={`ilist ${className}`}>
+      {items.map((t, i) => (
+        <li key={t}>
+          <span className="ilist-n mono" aria-hidden="true">
+            {String(i + 1).padStart(2, "0")}
+          </span>
           <span>{t}</span>
         </li>
       ))}

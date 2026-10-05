@@ -333,9 +333,6 @@ export default function Why() {
               <li key={r.title} className="why-r" style={vars({ "--i": i })}>
                 <div className="why-r-top">
                   <span className="why-r-n">{pad(i + 1)}</span>
-                  <span className="why-r-ok" aria-hidden="true">
-                    <Icon name="check" className="h-3.5 w-3.5" />
-                  </span>
                 </div>
                 <h3 className="why-r-t">{r.title}</h3>
                 <p className="why-r-d">{r.d}</p>

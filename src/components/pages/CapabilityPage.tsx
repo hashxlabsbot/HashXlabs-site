@@ -43,10 +43,10 @@ export default function CapabilityPage({ item, group, section }: { item: MenuIte
             <p className="t-lead mt-4">{item.d}.</p>
           </div>
           <ul className="grid gap-4 sm:grid-cols-3 lg:col-span-8">
-            {item.points.map((p) => (
+            {item.points.map((p, i) => (
               <li key={p} className="card p-6">
-                <span className="icon-badge h-9 w-9">
-                  <Icon name="check" className="h-[18px] w-[18px]" strokeWidth={2.2} />
+                <span className="mono text-[12px] tracking-[.08em] text-[var(--signal)]" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <p className="mt-4 text-[16px] font-semibold leading-snug tracking-tight">{p}</p>
               </li>

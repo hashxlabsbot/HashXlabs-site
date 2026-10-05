@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import Reveal from "@/components/Reveal";
 import Words from "@/components/fx/Words";
-import { CheckList } from "@/components/ui";
+import { IndexList } from "@/components/ui";
 import { ENGAGEMENTS } from "@/content/company";
 
 /**
@@ -46,7 +46,7 @@ export default function Engagements() {
                   <h3 className="eg-t">{e.title}</h3>
                   <p className="eg-d">{e.d}</p>
                   <div className="eg-rule" />
-                  <CheckList items={e.points} />
+                  <IndexList items={e.points} />
                 </div>
               </li>
             ))}

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import SiteShell from "@/components/SiteShell";
 import WorkShowcase from "@/components/work/WorkShowcase";
+import LiveProjects from "@/components/home/LiveProjects";
 import ServicesRail from "@/components/home/ServicesRail";
 import Audiences from "@/components/home/Audiences";
 import Why from "@/components/home/Why";
-import ProofHero from "@/components/home/ProofHero";
-import ProcessFactory from "@/components/home/ProcessFactory";
+import XHero from "@/components/home/XHero";
+import ProcessChain from "@/components/home/ProcessChain";
 import TechBento from "@/components/home/TechBento";
 import Engagements from "@/components/home/Engagements";
 import Token2049Band from "@/components/home/Token2049Band";
@@ -25,9 +26,9 @@ export const metadata: Metadata = pageMeta({
 export default function Home() {
   return (
     <SiteShell>
-      {/* ── Hero: clear offer + proof (components/home/ProofHero). The previous
-             image-corridor hero is components/home/StreamHero. ── */}
-      <ProofHero />
+      {/* ── Hero: dark stage, glass X fed by live blocks (components/home/XHero).
+             Earlier heroes: components/home/ProofHero, components/home/StreamHero. ── */}
+      <XHero />
 
       {/* ── Chains ── */}
       <div className="relative z-10 border-y border-[var(--line)] bg-white">
@@ -61,8 +62,12 @@ export default function Home() {
       {/* ── Why HashX: the lead sentence, demonstrated (components/home/Why) ── */}
       <Why />
 
-      {/* ── How we work: the five steps + interactive 3D model (components/home/ProcessFactory) ── */}
-      <ProcessFactory />
+      {/* ── How we work: five blocks to mainnet, pinned scroll chain (components/home/ProcessChain).
+             The previous three.js model is components/home/ProcessFactory. ── */}
+      <ProcessChain />
+
+      {/* ── Live projects: real client sites, scrolled inside 3D devices (components/home/LiveProjects) ── */}
+      <LiveProjects />
 
       {/* ── Selected work: pinned scroll tour (components/work) ── */}
       <WorkShowcase />

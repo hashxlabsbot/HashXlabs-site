@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import Icon from "@/components/icons/Icon";
 import InvariantRun from "./InvariantRun";
 import HeroField from "./HeroField";
 import { CHAINS } from "@/content/company";
@@ -60,7 +59,9 @@ export default function ProofHero() {
           <ul className="ph-proof">
             {PROOF.map((p, i) => (
               <li key={p} style={{ "--i": i } as CSSProperties}>
-                <Icon name="check" className="h-4 w-4" strokeWidth={2.2} />
+                <span className="ph-proof-n mono" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 {p}
               </li>
             ))}

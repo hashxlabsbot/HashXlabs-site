@@ -3,7 +3,7 @@ import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import Icon from "@/components/icons/Icon";
-import { Arrow, ButtonLink, CheckList, CTASection, PageHeader, Section, SectionHeader } from "@/components/ui";
+import { Arrow, ButtonLink, IndexList, CTASection, PageHeader, Section, SectionHeader } from "@/components/ui";
 import { PROCESS, SERVICE_AREAS, sectionAnchor } from "@/content/company";
 import { MENU, itemHref } from "@/content/menu";
 
@@ -49,7 +49,7 @@ export default function ServicesPage() {
               </span>
               <h2 className="t-h3 mt-6">{a.title}</h2>
               <p className="mt-2 text-[15px] leading-relaxed text-[var(--t-mid)]">{a.d}</p>
-              <CheckList items={a.points} className="mt-6" />
+              <IndexList items={a.points} className="mt-6" />
               <span className="link mt-auto pt-7 text-[14.5px]">
                 Learn more <Arrow />
               </span>

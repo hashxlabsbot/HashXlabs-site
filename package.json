@@ -9,6 +9,7 @@
     "lint": "eslint",
     "shots": "node scripts/make-shots.mjs",
     "shots:render": "node scripts/render-shots.mjs",
+    "sites": "node scripts/capture-sites.mjs",
     "stream": "node scripts/make-stream.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "marina": "node scripts/make-marina.mjs"

@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Full-page captures of client sites; regenerate with `npm run sites` (only the WebP output in public/img/sites is served)
+/assets-src/sites/
