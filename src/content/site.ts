@@ -229,7 +229,28 @@ export const WORK: Work[] = [
   },
 ];
 
-export const SOLUTIONS = [
+/* The five kinds of system on /solutions. `fails`, `spec` and `flow` drive the
+   page's visuals: the spec deck in the hero and the use-case explorer. Each
+   `spec` is an illustrative test in the language that system is usually
+   tested in, not code from a client project. `hot` = the flow node the spec
+   guards. */
+export type Solution = {
+  n: string;
+  title: string;
+  problem: string;
+  build: string;
+  test: string;
+  href: string;
+  builds: string[];
+  fails: string[];
+  flow: string[];
+  hot: number;
+  file: string;
+  runner: string;
+  spec: string[];
+};
+
+export const SOLUTIONS: Solution[] = [
   {
     n: "01",
     title: "DeFi protocols",
@@ -237,6 +258,19 @@ export const SOLUTIONS = [
     build: "AMMs, vaults, staking, lending primitives and routers.",
     test: "Solvency and share-price invariants under long random call sequences.",
     href: "/services/blockchain-development",
+    builds: ["AMMs", "ERC-4626 vaults", "Staking", "Lending primitives", "Routers"],
+    fails: ["A price read from a pool an attacker can move", "Shares minted before the assets arrive", "Rounding that favours the caller"],
+    flow: ["User", "Router", "Pool", "Vault", "Oracle"],
+    hot: 3,
+    file: "VaultInvariants.t.sol",
+    runner: "Foundry",
+    spec: [
+      "// Shares are never worth more than the assets behind them.",
+      "function invariant_solvency() public {",
+      "  assertGe(asset.balanceOf(address(vault)),",
+      "           vault.convertToAssets(vault.totalSupply()));",
+      "}",
+    ],
   },
   {
     n: "02",
@@ -245,6 +279,19 @@ export const SOLUTIONS = [
     build: "Permissioned tokens, claims registries, issuer consoles and distributions.",
     test: "Transfer rules, role separation and distribution rounding.",
     href: "/services/rwa-tokenization",
+    builds: ["ERC-3643 tokens", "Claims registries", "Issuer consoles", "Distributions"],
+    fails: ["A transfer to a wallet that never passed KYC", "An agent role that can also mint", "A payout that rounds past the pool"],
+    flow: ["Investor", "Claims", "Compliance", "Token", "Payouts"],
+    hot: 2,
+    file: "Compliance.t.sol",
+    runner: "Foundry",
+    spec: [
+      "// Only verified investors can ever hold the token.",
+      "function invariant_holdersVerified() public {",
+      "  for (uint256 i; i < holders.length; i++)",
+      "    assertTrue(registry.isVerified(holders[i]));",
+      "}",
+    ],
   },
   {
     n: "03",
@@ -253,6 +300,20 @@ export const SOLUTIONS = [
     build: "Threshold signing, policy engines, web and mobile clients.",
     test: "Approval bypass, replay and key rotation.",
     href: "/case-studies#custody",
+    builds: ["Threshold signing", "Policy engines", "Web & mobile clients", "Audit logs"],
+    fails: ["One stolen device that can move funds", "An approval replayed on a new request", "A key rotation that locks everyone out"],
+    flow: ["Client", "API", "Policy", "Signer", "KMS"],
+    hot: 2,
+    file: "policy.test.ts",
+    runner: "Vitest",
+    spec: [
+      "// No path signs with fewer than two approvals.",
+      'test("cannot sign alone", async () => {',
+      "  const req = await policy.request(transfer);",
+      "  await approve(req, alice);",
+      '  await expect(signer.sign(req)).rejects.toThrow("2 of 3");',
+      "});",
+    ],
   },
   {
     n: "04",
@@ -261,6 +322,19 @@ export const SOLUTIONS = [
     build: "ERC-20 systems, vesting, governors, timelocks and treasuries.",
     test: "Flash-loan voting, vesting edge cases and privileged roles.",
     href: "/services/blockchain-development",
+    builds: ["ERC-20 systems", "Vesting", "Governors", "Timelocks", "Treasuries"],
+    fails: ["Voting power borrowed for a single block", "A vesting cliff that unlocks early", "A privileged role with no timelock"],
+    flow: ["Holder", "Token", "Governor", "Timelock", "Treasury"],
+    hot: 2,
+    file: "Governance.t.sol",
+    runner: "Foundry",
+    spec: [
+      "// Votes count at the snapshot, so a flash loan adds nothing.",
+      "function invariant_noFlashVotes() public {",
+      "  uint256 snap = gov.proposalSnapshot(proposalId);",
+      "  assertEq(gov.getVotes(attacker, snap), votesAt[snap]);",
+      "}",
+    ],
   },
   {
     n: "05",
@@ -269,6 +343,19 @@ export const SOLUTIONS = [
     build: "Retrieval, scoped tool-calling agents and approval queues.",
     test: "Unapproved actions, prompt injection and quality regressions.",
     href: "/services/ai-development",
+    builds: ["Retrieval (RAG)", "Scoped tool-calling agents", "Approval queues", "Evaluation sets"],
+    fails: ["A document that tells the agent what to do", "A write that skips human approval", "Answer quality that quietly regresses"],
+    flow: ["Question", "Retriever", "Agent", "Approval", "ERP"],
+    hot: 3,
+    file: "test_agent.py",
+    runner: "pytest",
+    spec: [
+      "# No write reaches the ERP without a human approval.",
+      "def test_write_needs_approval(agent, erp, queue):",
+      '    agent.run("mark order 4411 as shipped")',
+      "    assert erp.writes == []",
+      '    assert queue.pending[0].action == "update_order"',
+    ],
   },
 ];
 
