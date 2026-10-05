@@ -3056,6 +3056,11 @@ html.hx-intro:not(.hx-intro-go):not(.hx-intro-skip) :is(.ph-eyebrow, .ph-title, 
   .xh-ground-k { display: inline-flex; align-items: center; gap: 8px; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.45); }
   .xh-ground-dot { position: relative; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
   .xh-ground-dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid #4ade80; animation: xhPing 2s ease-out infinite; }
+  .xh-ground-off { display: none; }
+  .xh-horizon[data-feed="down"] .xh-ground-on { display: none; }
+  .xh-horizon[data-feed="down"] .xh-ground-off { display: inline; }
+  .xh-horizon[data-feed="down"] .xh-ground-dot { background: #fbbf24; }
+  .xh-horizon[data-feed="down"] .xh-ground-dot::after { display: none; }
   .xh-proof { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
   .xh-proof li { display: flex; align-items: baseline; justify-content: center; gap: 9px; font-size: 13.5px; color: rgba(255,255,255,.72); }
   .xh-proof .mono { font-size: 10.5px; letter-spacing: .06em; color: #8cf4ff; }

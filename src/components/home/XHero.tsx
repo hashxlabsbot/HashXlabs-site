@@ -76,7 +76,8 @@ export default function XHero() {
           <div className="xh-ground">
             <p className="xh-ground-k mono">
               <span className="xh-ground-dot" aria-hidden="true" />
-              Live from mainnet, read in your browser
+              <span className="xh-ground-on">Live from Ethereum mainnet</span>
+              <span className="xh-ground-off">Mainnet feed paused, retrying</span>
             </p>
             <ul className="xh-proof">
               {PROOF.map((p, i) => (
